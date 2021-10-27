@@ -176,7 +176,7 @@ public class Fingerprint {
    * @param row             the row of the minutia.
    * @param col             the col of the minutia.
    * @param slope           the slope as returned by
-   *                        {@link #computeSlope(boolean[][], int, int, int)}.
+   *                        {@link #computeSlope(boolean[][], int, int)}.
    * @return the orientation of the minutia in radians.
    */
   public static double computeAngle(boolean[][] connectedPixels, int row, int col, double slope) {

@@ -49,7 +49,6 @@ public final class Helper {
    * @param name Name of the image to read, or path relative to the resource
    *             folder.
    * @return HxW array of packed RGB colors, or <code>null</code> on failure
-   * @see #write
    */
   public static int[][] readARGB(final String name) {
     try {
@@ -68,7 +67,7 @@ public final class Helper {
    * @param name Name of the image to read, or path relative to the resource
    *             folder.
    * @return HxW array of packed binary colors, or <code>null</code> on failure
-   * @see #write
+   * @see #toBinary
    */
   public static boolean[][] readBinary(final String name) {
     final int[][] image = readARGB(name);
@@ -95,7 +94,6 @@ public final class Helper {
    * @param array HxW array of packed RGB colors
    * @return {@code true} if write operation was successful, {@code false}
    *         otherwise
-   * @see #read
    */
   public static boolean writeARGB(final String path, final int[][] array) {
 
@@ -235,7 +233,7 @@ public final class Helper {
    * Converts an ARGB image to binary by:
    * <ul>
    * <li>computing each pixel's luminance value using
-   * {@link #ARGBtoLuminance(int[][])}</li>
+   * {@link #pixelLuminance}</li>
    * <li>if the luminance is strictly below <code>128</code>, the pixel will be
    * set to <code>1</code>, that is, <code>true</code>, otherwise it will be set
    * to <code>false</code></li>
