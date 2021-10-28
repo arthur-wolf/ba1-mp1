@@ -68,7 +68,7 @@ public class Fingerprint {
   public static boolean[] getNeighbours(boolean[][] image, int row, int col) {
 	  assert (image != null); // special case that is not expected (the image is supposed to have been checked
                               // earlier)
-
+        //todo implement
 	  return null;
   }
 
@@ -136,8 +136,9 @@ public class Fingerprint {
         boolean isIdentical = true;         // booléen pour tester si chacun des coeff [i][j] des deux images sont égaux
         for (int i=0; i<image1.length; i++){            // boucle for accédant à chaque ligne des images
             for (int j=0; j<image1[i].length; j++){     // boucle for accédant à chaque colonne des images
-                if (!(image1[i][j] == image2[i][j])){   // Si le coefficient [i][j] de chaque image est différent
+                if (!(image1[i][j] == image2[i][j])) {   // Si le coefficient [i][j] de chaque image est différent
                     isIdentical = false;                // Alors notre booléen devient false
+                    break;                  // Si un élément est différent, les deux images aussi, on s'arrette là
                 }
             }
         }
