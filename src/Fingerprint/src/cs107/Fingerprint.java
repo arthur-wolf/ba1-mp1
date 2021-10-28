@@ -1,5 +1,7 @@
 package cs107;
 
+import jdk.swing.interop.DropTargetContextWrapper;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -68,7 +70,7 @@ public class Fingerprint {
   public static boolean[] getNeighbours(boolean[][] image, int row, int col) {
 	  assert (image != null); // special case that is not expected (the image is supposed to have been checked
                               // earlier)
-	  //TODO implement
+
 	  return null;
   }
 
@@ -82,8 +84,13 @@ public class Fingerprint {
    * @return the number of black neighbours.
    */
   public static int blackNeighbours(boolean[] neighbours) {
-	  //TODO implement
-	  return 0;
+	  int count = 0;                                // Variable de comptage
+      for (int i=0; i<neighbours.length; i++){      // Boucle pour accéder aux élements du tableau neighbours[]
+          if (neighbours[i]){                       // Si le pixel est noir
+              count++;                              // On augmente de 1 le nombre de pixels noirs
+          }
+      }
+	  return count;                                 // et on retourne le nombre total de pixels noirs
   }
   
   /**
@@ -96,21 +103,15 @@ public class Fingerprint {
    * @return the number of white to black transitions.
    */
   public static int transitions(boolean[] neighbours) {
-	  //TODO implement
-	  return 0;
-  }
-
-  /**
-   * Returns <code>true</code> if the images are identical and false otherwise.
-   *
-   * @param image1 array containing each pixel's boolean value.
-   * @param image2 array containing each pixel's boolean value.
-   * @return <code>True</code> if they are identical, <code>false</code>
-   *         otherwise.
-   */
-  public static boolean identical(boolean[][] image1, boolean[][] image2) {
-	  //TODO implement
-	  return false;
+      int count = 0;                                //variable de comptage
+      for (int i = 0; i < neighbours.length - 1; i++) { // i va de 0 a 6 donc check les transitions 0-1 ... 6-7
+          if ((neighbours[i] != neighbours[i + 1]) || (neighbours[7] != neighbours[0])) {
+              // Si deux pixels successifs sont différents
+              // + cas des pixels aux indices 7 et 0 (éviter une bounding error)
+              count++;                              // On itère sur la valeur de count
+          }
+      }
+      return count;
   }
 
   /**
@@ -124,7 +125,27 @@ public class Fingerprint {
 	  //TODO implement
 	  return null;
   }
-  
+
+    /**
+     * Returns <code>true</code> if the images are identical and false otherwise.
+     *
+     * @param image1 array containing each pixel's boolean value.
+     * @param image2 array containing each pixel's boolean value.
+     * @return <code>True</code> if they are identical, <code>false</code>
+     *         otherwise.
+     */
+    public static boolean identical(boolean[][] image1, boolean[][] image2) {
+        boolean isIdentical = true;         // booléen pour tester si chacun des coeff [i][j] des deux images sont égaux
+        for (int i=0; i<image1.length; i++){            // boucle for accédant à chaque ligne des images
+            for (int j=0; j<image1[i].length; j++){     // boucle for accédant à chaque colonne des images
+                if (!(image1[i][j] == image2[i][j])){   // Si le coefficient [i][j] de chaque image est différent
+                    isIdentical = false;                // Alors notre booléen devient false
+                }
+            }
+        }
+        return isIdentical;                             // On retourne la valeur du booléen
+    }
+
   /**
    * Compute the skeleton of a boolean image.
    *
