@@ -76,7 +76,6 @@ public class Fingerprint {
        /*
         On met dans une liste ordonnée de type String toutes les positions à vérifier sous le format "ligne:colonne".
        */
-
       String [] coordsToCheck = new String[8];
       coordsToCheck[0] = (row - 1) + ":" + col;         //P0
       coordsToCheck[1] = (row - 1) + ":" + (col + 1);   //P1
@@ -107,7 +106,7 @@ public class Fingerprint {
                   result[i] = false;
               }
           }else{
-              //Le pixel n'appartient pas à image (outOfBounds) mais on considère qu'il est blanc -> false;
+              //Le pixel n'appartient pas à image (outOfBounds) mais on considère qu'il est blanc --> false ;
               result[i] = false;
           }
       }
@@ -172,10 +171,9 @@ public class Fingerprint {
       assert (image != null);
       boolean [][] newImage = copyList(image);
 
-
       for (int row = 0; row < newImage.length; ++row){
           for (int column = 0; column < newImage[0].length; ++column){
-              if(checkConditions(newImage, row, column, step)){
+              if(checkConditions(image, row, column, step)){
                   newImage[row][column] = false;
               }
           }
@@ -197,7 +195,7 @@ public class Fingerprint {
               boolean P2 = neighbours[2];
               boolean P4 = neighbours[4];
               boolean P6 = neighbours[6];
-
+                //todo cleanup and maybe put again together ?
 
               if (step == 0) {
                   if (!isPixelBlack(P0) || !isPixelBlack(P2) || !isPixelBlack(P4)) {
@@ -238,27 +236,24 @@ public class Fingerprint {
    */
   public static boolean[][] thin(boolean[][] image) {
       boolean [][] newImage = copyList(image);
-
+        //todo cleanup
       int i = 0;
-      boolean hasChange = false;
+      boolean hasChanged = false;
 
       while(true){
-          hasChange = false;
+          hasChanged = false;
           boolean [][] resultStep1 = thinningStep(newImage, 0);
           if(!identical(resultStep1, newImage)){
-              hasChange = true;
+              hasChanged = true;
           }
-          Helper.writeBinary("debug/debug_skeleton_1_" + i  + "_small.png", resultStep1);
-          ++i;
+
           boolean [][] resultStep2 = thinningStep(resultStep1, 1);
           if(!identical(resultStep1, resultStep2)){
-              hasChange = true;
+              hasChanged = true;
           }
-          Helper.writeBinary("debug/debug_skeleton_1_" + i  + "_small.png", resultStep2);
-          ++i;
-          newImage = resultStep2;
 
-          if(!hasChange){
+          newImage = resultStep2;
+          if(!hasChanged){
               return newImage;
           }
       }
