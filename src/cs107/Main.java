@@ -22,8 +22,7 @@ public class Main {
     testGetNeighbours();
     testBlackNeighbours1();
     testBlackNeighbours2();
-    testTransition1();
-    testTransition2();
+    testTransition();
     testIdentical1();
     testIdentical2();
     testIdentical3();
@@ -54,7 +53,7 @@ public class Main {
     //testCompareFingerprints("1_1", "2_1", false); //expected match: false
 
     //compare 1_1 with all other images of the same finger
-    testCompareAllFingerprints("1_1", 1, true);
+   // testCompareAllFingerprints("1_1", 1, true);
 
     //compare 1_1 with all images of finger 2
     //testCompareAllFingerprints("1_1", 2, false);
@@ -98,6 +97,24 @@ public class Main {
       printArray(expected2);
       System.out.print("Computed: ");
       printArray(neighbours2);
+    }
+
+    System.out.print("testGetNeighbours 3: ");
+    boolean[][] image3 = {{true, true, true, true},
+                          {true, false, false, true},
+                          {true, false, false, true},
+                          {true, true, true, true}};
+    boolean[] neighbours3 = Fingerprint.getNeighbours(image3, 1, 1);
+    boolean[] expected3 = {true, true, false,  false,
+                          false, true, true, true};
+    if (arrayEqual(neighbours3, expected3)) {
+      System.out.println("OK");
+    } else {
+      System.out.println("ERROR");
+      System.out.print("Expected: ");
+      printArray(expected3);
+      System.out.print("Computed: ");
+      printArray(neighbours3);
     }
   }
 
@@ -144,7 +161,7 @@ public class Main {
   /*
     This function tests the functionalities of transition on a first dataset
   */
-  public static void testTransition1(){
+  public static void testTransition(){
     System.out.print("testTransition1: ");
     boolean[] neighbours = {false, true, true,
                             false, false,
@@ -159,25 +176,50 @@ public class Main {
       System.out.print("Expected: " + expected + " ");
       System.out.println("Computed: " + result);
     }
-  }
 
-  /*
-    This function tests the functionalities of transition on a second dataset
-  */
-  public static void testTransition2(){
     System.out.print("testTransition2: ");
-    boolean[] neighbours = {true, false, true,
+    boolean[] neighbours2 = {true, false, true,
             false, true,
             false, true, false, false};
-    int expected = 4;
+    int expected2 = 4;
 
-    int result = Fingerprint.transitions(neighbours);
-    if(result == expected){
+    int result2 = Fingerprint.transitions(neighbours2);
+    if(result2 == expected2){
       System.out.println("OK");
     }else{
       System.out.println("ERROR");
-      System.out.print("Expected: " + expected + " ");
-      System.out.println("Computed: " + result);
+      System.out.print("Expected: " + expected2 + " ");
+      System.out.println("Computed: " + result2);
+    }
+
+    System.out.print("testTransition3: ");
+    boolean[] neighbours3 = {false, false, true,
+            false, true,
+            false, true, true};
+    int expected3 = 3;
+
+    int result3 = Fingerprint.transitions(neighbours3);
+    if(result3 == expected3){
+      System.out.println("OK");
+    }else{
+      System.out.println("ERROR");
+      System.out.print("Expected: " + expected3 + " ");
+      System.out.println("Computed: " + result3);
+    }
+
+    System.out.print("testTransition4: ");
+    boolean[] neighbours4 = {false, true, true,
+            false, false,
+            false, true, false, false};
+    int expected4 = 2;
+
+    int result4 = Fingerprint.transitions(neighbours4);
+    if(result4 == expected4){
+      System.out.println("OK");
+    }else{
+      System.out.println("ERROR");
+      System.out.print("Expected: " + expected4 + " ");
+      System.out.println("Computed: " + result4);
     }
   }
 

@@ -63,6 +63,7 @@ public class Fingerprint {
    *              <code>image[row].length</code>(excluded).
    * @return An array containing each neighbours' value.
    */
+
   public static boolean[] getNeighbours(boolean[][] image, int row, int col) {
 	  assert (image != null); // special case that is not expected (the image is supposed to have been checked
                               // earlier)
@@ -86,13 +87,11 @@ public class Fingerprint {
       coordsToCheck[6] = row + ":" + (col - 1);         //P6
       coordsToCheck[7] = (row - 1) + ":" + (col - 1);   //P7
 
-      //On initialise un tableau boolean de taille 8.
       boolean [] result = new boolean[8];
 
       /*
         On récupère pour chaque élément du tableau la ligne et la colonne à tester (coordonnées du pixel en question)
        */
-
       for (int i = 0; i < coordsToCheck.length; ++i) {
           int rowToTest = Integer.parseInt(coordsToCheck[i].split(":")[0]);
           int columnToTest = Integer.parseInt(coordsToCheck[i].split(":")[1]);
@@ -102,11 +101,9 @@ public class Fingerprint {
             Et que columnToTest est compris entre 0 et le nombre de colonnes
            */
           if(rowToTest >= 0 && rowToTest <= (image.length - 1) && columnToTest >= 0 && columnToTest <= (image[rowToTest].length - 1)){
-              if(isBlackPixel(image[rowToTest][columnToTest])){
-                  //Le pixel en coordonées rowToTest, columnToTest est noir.
+              if(isPixelBlack(image[rowToTest][columnToTest])){
                   result[i] = true;
               }else{
-                  //Le pixel en coordonées rowToTest, columnToTest est blanc.
                   result[i] = false;
               }
           }else{
@@ -128,15 +125,15 @@ public class Fingerprint {
    * @return the number of black neighbours.
    */
   public static int blackNeighbours(boolean[] neighbours) {
-      assert(neighbours != null); //supposé ne pas etre le cas.
+      assert(neighbours != null);
 
-	  int count = 0;                                // Variable de comptage
-      for (int i = 0; i < neighbours.length; i++){  // Boucle pour accéder aux élements du tableau neighbours[]
-          if (neighbours[i]){                       // Si le pixel est noir
-              count++;                              // On augmente de 1 le nombre de pixels noirs
+	  int count = 0;
+      for (int i = 0; i < neighbours.length; i++){
+          if (isPixelBlack(neighbours[i])){
+              count++;
           }
       }
-	  return count;                                 // et on retourne le nombre total de pixels noirs
+	  return count;
   }
   
   /**
@@ -149,21 +146,18 @@ public class Fingerprint {
    * @return the number of white to black transitions.
    */
   public static int transitions(boolean[] neighbours) {
-      assert(neighbours != null); //supposé ne pas etre le cas.
-      //variable de comptage
+      assert(neighbours != null);
       int count = 0;
 
-      /*
-        Ici on compare chaque élémént consécutif deux à deux.
-        Si l'élement i est true (noir) et l'élement i+1 est false (blanc), on a une transition.
-        Le modulo nous permet de comparer 7 avec 0 car quand on arrivera à i = 7, i+1%8 =8%8 = 0
-       */
-       for(int i = 0; i < (neighbours.length - 1); ++i){
-           if ((neighbours[i] && !neighbours[(i + 1) % 8])) {
+       for(int i = 0; i < (neighbours.length-1); ++i){
+           if ((isPixelBlack(neighbours[i]) && !isPixelBlack(neighbours[(i + 1)]))) {
                count++;
            }
        }
 
+      if ((isPixelBlack(neighbours[(neighbours.length-1)]) && !isPixelBlack(neighbours[0]))) {
+          count++;
+      }
       return count;
   }
 
@@ -175,53 +169,52 @@ public class Fingerprint {
    * @return A new array containing each pixel's value after the step.
    */
   public static boolean[][] thinningStep(boolean[][] image, int step) {
-      //On crée une copie indépendante de image stockée dans newImage.
       assert (image != null);
-      boolean [][] newImage = new boolean[image.length][image[0].length];
-      for(int i = 0; i < image.length; ++i){
-          for(int j = 0; j < image[0].length; ++j){
-              newImage[i][j] = image[i][j];
-          }
-      }
+      boolean [][] newImage = copyList(image);
+
 
       for (int row = 0; row < newImage.length; ++row){
           for (int column = 0; column < newImage[0].length; ++column){
-              boolean [] neighbours = getNeighbours(newImage, row, column);
-              /*
-                Pas besoin de vérifier si neighbours est null car si !areNeighboursNull, la lazy evaluation
-                fera que la suite des conditions n'est pas évaluée.
-              */
-              if (isBlackPixel(newImage[row][column]) && !areNeighboursNull(newImage, row, column)
-                      && blackNeighbours(neighbours) >= 2 && blackNeighbours(neighbours) <= 6 && transitions(neighbours) == 1){
+              if(checkConditions(newImage, row, column, step)){
+                  newImage[row][column] = false;
+              }
+          }
+      }
+	  return newImage;
+  }
 
-                  if((row -1 ) >= 0){
-                      boolean P0 = newImage[row-1][column];
-                  }
+  public static boolean checkConditions(boolean [][] image, int row, int column, int step){
+      boolean [] neighbours = getNeighbours(image, row, column);
+      assert neighbours != null;
+      /*
+        Pas besoin de vérifier si neighbours est null car si !areNeighboursNull, la lazy evaluation
+        fera que la suite des conditions n'est pas évaluée.
+      */
+      if (isPixelBlack(image[row][column]) && !areNeighboursNull(image, row, column)) {
+          if ((blackNeighbours(neighbours) >= 2 && blackNeighbours(neighbours) <= 6) && transitions(neighbours) == 1) {
 
-                  boolean P0 = newImage[row-1][column];
-                  boolean P2 = newImage[row][column+1];
-                  boolean P4 = newImage[row+1][column];
-                  boolean P6 = newImage[row][column-1];
+              boolean P0 = neighbours[0];
+              boolean P2 = neighbours[2];
+              boolean P4 = neighbours[4];
+              boolean P6 = neighbours[6];
 
-                  if(step == 0){
-                      if (!(isBlackPixel(P0) && isBlackPixel(P2) && isBlackPixel(P4))){
-                          if (!(isBlackPixel(P2) && isBlackPixel(P4) && isBlackPixel(P6))){
-                              //Le pixel respecte toutes les conditions de l'étape 1: on l'efface -> set en blanc.
-                              newImage[row][column] = false;
-                          }
+
+              if (step == 0) {
+                  if (!isPixelBlack(P0) || !isPixelBlack(P2) || !isPixelBlack(P4)) {
+                      if (!isPixelBlack(P2) || !isPixelBlack(P4) || !isPixelBlack(P6)) {
+                          return true;
                       }
-                  }else{
-                      if(!(isBlackPixel(P0) && isBlackPixel(P2) && isBlackPixel(P6))){
-                          if(!(isBlackPixel(P0) && isBlackPixel(P4) && isBlackPixel(P6))){
-                              //Le pixel respecte toutes les conditions de l'étape 2: on l'efface -> set en blanc.
-                              newImage[row][column] = false;
-                          }
+                  }
+              } else if (step == 1) {
+                  if (!isPixelBlack(P0) || !isPixelBlack(P2) || !isPixelBlack(P6)) {
+                      if (!isPixelBlack(P0) || !isPixelBlack(P4) || !isPixelBlack(P6)) {
+                          return true;
                       }
                   }
               }
           }
       }
-	  return newImage;
+      return false;
   }
 
     /**
@@ -233,14 +226,7 @@ public class Fingerprint {
      *         otherwise.
      */
     public static boolean identical(boolean[][] image1, boolean[][] image2) {
-        for (int i = 0; i < image1.length; i++){            // boucle for accédant à chaque ligne des images
-            for (int j = 0; j < image1[i].length; j++){     // boucle for accédant à chaque colonne des images
-                if (image1[i][j] != image2[i][j]) {      // Si un coeff[i][j] d'uneimage est différent
-                    return false;                           // Alors les images sont différentes, return false
-                }
-            }
-        }
-        return true;
+        return Main.arrayEqual(image1, image2);
     }
 
   /**
@@ -251,12 +237,32 @@ public class Fingerprint {
    *         applying the thinning algorithm.
    */
   public static boolean[][] thin(boolean[][] image) {
-      boolean[][] newImage;
-      do{
-          newImage = thinningStep(image, 0);
-          newImage = thinningStep(newImage, 1);
-      }while(!identical(newImage, image));
-	  return null;
+      boolean [][] newImage = copyList(image);
+
+      int i = 0;
+      boolean hasChange = false;
+
+      while(true){
+          hasChange = false;
+          boolean [][] resultStep1 = thinningStep(newImage, 0);
+          if(!identical(resultStep1, newImage)){
+              hasChange = true;
+          }
+          Helper.writeBinary("debug/debug_skeleton_1_" + i  + "_small.png", resultStep1);
+          ++i;
+          boolean [][] resultStep2 = thinningStep(resultStep1, 1);
+          if(!identical(resultStep1, resultStep2)){
+              hasChange = true;
+          }
+          Helper.writeBinary("debug/debug_skeleton_1_" + i  + "_small.png", resultStep2);
+          ++i;
+          newImage = resultStep2;
+
+          if(!hasChange){
+              return newImage;
+          }
+      }
+
   }
 
   /**
@@ -429,25 +435,35 @@ public class Fingerprint {
   }
 
     /**
-     * Check if a pixel is black.
+     * Checks if a pixel is black.
      *
      * @param value the boolean value associated to the pixel.
      * @return Returns <code>true</code> if the pixel is black and <code>false</code>
      *         otherwise.
      */
-    public static boolean isBlackPixel(boolean value) {
+    public static boolean isPixelBlack(boolean value) {
         return (value);
     }
 
     /**
-     * Check if neighbours of a pixel exist.
+     * Checks if neighbours of a pixel exist.
      *
      * @param row the integer value associated to the row.
      * @param column the integer value associated to the column.
      * @return Returns <code>true</code> if the neighbours are null and <code>false</code>
      *         otherwise.
      */
-    public static boolean areNeighboursNull(boolean[][]image, int row, int column){
-        return getNeighbours(image, row, column) == null;
+    public static boolean areNeighboursNull(boolean[][] image, int row, int column){
+        return getNeighbours(image, row, column) == null; //return true si neighbours[] est null
+    }
+
+    public static boolean[][] copyList(boolean[][] list){
+        boolean [][] newList =  new boolean[list.length][list[0].length];
+        for(int i = 0; i < list.length; ++i){
+            for(int j = 0; j < list[0].length; ++j){
+                newList[i][j] = list[i][j];
+            }
+        }
+        return newList;
     }
 }
