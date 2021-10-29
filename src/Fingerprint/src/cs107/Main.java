@@ -20,20 +20,20 @@ public class Main {
 	System.out.println("Uncomment the function calls in Main.main to test your implementation.");
 	System.out.println("The provided tests are not complete. You have to write your own tests.");
     //testGetNeighbours();
-    testBlackNeighbours1();
-    testBlackNeighbours2();
-    testTransition1();
-    testTransition2();
-    testIdentical1();
-    testIdentical2();
-    testIdentical3();
+    //testBlackNeighbours1();
+    //testBlackNeighbours2();
+    //testTransition1();
+    //testTransition2();
+    //testIdentical1();
+    //testIdentical2();
+    //testIdentical3();
     //testConnectedPixels1();
     //testConnectedPixels2();
     //testConnectedPixels3();
     //testOrientation();
     //testApplyRotation();
     //testApplyTranslation();
-    //testThin();
+    testThin();
     //testWithSkeleton();
     
     //testDrawSkeleton("1_1"); //draw skeleton of fingerprint 1_1.png
