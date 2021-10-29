@@ -1,8 +1,6 @@
 package cs107;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
+import java.util.*;
 
 /**
  * Provides tools to compare fingerprint.
@@ -69,7 +67,51 @@ public class Fingerprint {
 	  assert (image != null); // special case that is not expected (the image is supposed to have been checked
                               // earlier)
         //todo implement
-	  return null;
+
+      /*
+        On met dans une liste ordonnée de type String toutes les positions à vérifier sous le format "ligne:colonne".
+       */
+
+      String [] coordsToCheck = new String[8];
+      coordsToCheck[0] = (row - 1) + ":" + col;         //P0
+      coordsToCheck[1] = (row - 1) + ":" + (col + 1);   //P1
+      coordsToCheck[2] = row + ":" + (col + 1);         //P2
+      coordsToCheck[3] = (row + 1) + ":" + (col + 1);   //P3
+      coordsToCheck[4] = (row + 1) + ":" + col;         //P4
+      coordsToCheck[5] = (row + 1) + ":" + (col - 1);   //P5
+      coordsToCheck[6] = row + ":" + (col - 1);         //P6
+      coordsToCheck[7] = (row - 1) + ":" + (col - 1);   //P7
+
+      //On initialise un tableau boolean de taille 8.
+      boolean [] result = new boolean[8];
+
+      /*
+        On récupère pour chaque élément du tableau la ligne et la colonne à tester (coordonnées du pixel en question)
+       */
+
+      for (int i = 0; i < coordsToCheck.length; ++i) {
+          int rowToTest = Integer.parseInt(coordsToCheck[i].split(":")[0]);
+          int columnToTest = Integer.parseInt(coordsToCheck[i].split(":")[1]);
+
+          /*
+            Ici on vérifie que rowToTest est compris entre 0 et le nombre de lignes
+            Et que columnToTest est compris entre 0 et le nombre de colonnes
+           */
+          if(rowToTest >= 0 && rowToTest <= (image.length - 1) && columnToTest >= 0 && columnToTest <= (image[rowToTest].length - 1)){
+              if(image[rowToTest][columnToTest]){
+                  //Le pixel en coordonées rowToTest, columnToTest est noir.
+                  result[i] = true;
+              }else{
+                  //Le pixel en coordonées rowToTest, columnToTest est blanc.
+                  result[i] = false;
+              }
+          }else{
+              //Le pixel n'appartient pas à image (outOfBounds) mais on considère qu'il est blanc -> false;
+              result[i] = false;
+          }
+      }
+
+	  return result;
   }
 
   /**
@@ -83,7 +125,7 @@ public class Fingerprint {
    */
   public static int blackNeighbours(boolean[] neighbours) {
 	  int count = 0;                                // Variable de comptage
-      for (int i=0; i<neighbours.length; i++){      // Boucle pour accéder aux élements du tableau neighbours[]
+      for (int i = 0; i < neighbours.length; i++){  // Boucle pour accéder aux élements du tableau neighbours[]
           if (neighbours[i]){                       // Si le pixel est noir
               count++;                              // On augmente de 1 le nombre de pixels noirs
           }
@@ -101,14 +143,20 @@ public class Fingerprint {
    * @return the number of white to black transitions.
    */
   public static int transitions(boolean[] neighbours) {
-      int count = 0;                                //variable de comptage
-      for (int i = 0; i < neighbours.length - 1; i++) { // i va de 0 a 6 donc check les transitions 0-1 ... 6-7
-          if ((neighbours[i] != neighbours[i + 1]) || (neighbours[7] != neighbours[0])) {
-              // Si deux pixels successifs sont différents
-              // + cas des pixels aux indices 7 et 0 (éviter une bounding error)
-              count++;                              // On itère sur la valeur de count
-          }
-      }
+      //variable de comptage
+      int count = 0;
+
+      /*
+        Ici on compare chaque élémént consécutif deux à deux.
+        Si l'élement i est true (noir) et l'élement i+1 est false (blanc), on a une transition.
+        Le modulo nous permet de comparer 7 avec 0 car quand on arrivera à i = 7, i+1%8 =8%8 = 0
+       */
+       for(int i = 0; i < (neighbours.length - 1); ++i){
+           if ((neighbours[i] && !neighbours[(i + 1) % 8])) {
+               count++;
+           }
+       }
+
       return count;
   }
 
@@ -133,16 +181,14 @@ public class Fingerprint {
      *         otherwise.
      */
     public static boolean identical(boolean[][] image1, boolean[][] image2) {
-        boolean isIdentical = true;         // booléen pour tester si chacun des coeff [i][j] des deux images sont égaux
-        for (int i=0; i<image1.length; i++){            // boucle for accédant à chaque ligne des images
-            for (int j=0; j<image1[i].length; j++){     // boucle for accédant à chaque colonne des images
-                if (!(image1[i][j] == image2[i][j])) {   // Si le coefficient [i][j] de chaque image est différent
-                    isIdentical = false;                // Alors notre booléen devient false
-                    break;                  // Si un élément est différent, les deux images aussi, on s'arrette là
+        for (int i = 0; i < image1.length; i++){            // boucle for accédant à chaque ligne des images
+            for (int j = 0; j < image1[i].length; j++){     // boucle for accédant à chaque colonne des images
+                if (image1[i][j] != image2[i][j]) {      // Si un coeff[i][j] d'uneimage est différent
+                    return false;                           // Alors les images sont différentes, return false
                 }
             }
         }
-        return isIdentical;                             // On retourne la valeur du booléen
+        return true;
     }
 
   /**

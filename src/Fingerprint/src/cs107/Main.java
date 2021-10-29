@@ -20,6 +20,13 @@ public class Main {
 	System.out.println("Uncomment the function calls in Main.main to test your implementation.");
 	System.out.println("The provided tests are not complete. You have to write your own tests.");
     //testGetNeighbours();
+    testBlackNeighbours1();
+    testBlackNeighbours2();
+    testTransition1();
+    testTransition2();
+    testIdentical1();
+    testIdentical2();
+    testIdentical3();
     //testConnectedPixels1();
     //testConnectedPixels2();
     //testConnectedPixels3();
@@ -91,6 +98,160 @@ public class Main {
       printArray(expected2);
       System.out.print("Computed: ");
       printArray(neighbours2);
+    }
+  }
+
+  /*
+    This function tests the functionalities of blackNeighbours on a first dataset
+   */
+  public static void testBlackNeighbours1(){
+    System.out.print("testBlackNeighbours1: ");
+    boolean[] neighbours = {false, true, true,
+                            false, false,
+                            false, true, false};
+    int expected = 3;
+
+    int result = Fingerprint.blackNeighbours(neighbours);
+    if(result == expected){
+      System.out.println("OK");
+    }else{
+      System.out.println("ERROR");
+      System.out.print("Expected: " + expected + " ");
+      System.out.println("Computed: " + result);
+    }
+  }
+
+  /*
+    This function tests the functionalities of blackNeighbours on a second dataset
+   */
+  public static void testBlackNeighbours2(){
+    System.out.print("testBlackNeighbours2: ");
+    boolean[] neighbours = {true, true, false,
+                            false, true,
+                            false, false, true};
+    int expected = 4;
+
+    int result = Fingerprint.blackNeighbours(neighbours);
+    if(result == expected){
+      System.out.println("OK");
+    }else{
+      System.out.println("ERROR");
+      System.out.print("Expected: " + expected + " ");
+      System.out.println("Computed: " + result);
+    }
+  }
+
+  /*
+    This function tests the functionalities of transition on a first dataset
+  */
+  public static void testTransition1(){
+    System.out.print("testTransition1: ");
+    boolean[] neighbours = {false, true, true,
+                            false, false,
+                            false, true, false, false};
+    int expected = 2;
+
+    int result = Fingerprint.transitions(neighbours);
+    if(result == expected){
+      System.out.println("OK");
+    }else{
+      System.out.println("ERROR");
+      System.out.print("Expected: " + expected + " ");
+      System.out.println("Computed: " + result);
+    }
+  }
+
+  /*
+    This function tests the functionalities of transition on a second dataset
+  */
+  public static void testTransition2(){
+    System.out.print("testTransition2: ");
+    boolean[] neighbours = {true, false, true,
+            false, true,
+            false, true, false, false};
+    int expected = 4;
+
+    int result = Fingerprint.transitions(neighbours);
+    if(result == expected){
+      System.out.println("OK");
+    }else{
+      System.out.println("ERROR");
+      System.out.print("Expected: " + expected + " ");
+      System.out.println("Computed: " + result);
+    }
+  }
+
+  /*
+    This function tests the functionalities of transition on a second dataset
+  */
+  public static void testIdentical1(){
+    System.out.print("testIdentical1: ");
+    boolean[][] image1 = {{false, true, false, true},
+                          {true, false, true, false},
+                          {false, true, true, false},
+                          {true, false, false, true}};
+    boolean[][] image2 = {{true, true, true, true},
+                          {false, false, false, false},
+                          {false, false, true, false},
+                          {false, false, false, false}};
+    boolean expected = false;
+    boolean result = Fingerprint.identical(image1, image2);
+    if(result == expected){
+      System.out.println("OK");
+    }else{
+      System.out.println("ERROR");
+      System.out.print("Expected: " + expected + " ");
+      System.out.println("Computed: " + result);
+    }
+  }
+
+  /*
+    This function tests the functionalities of identical on a second dataset
+  */
+  public static void testIdentical2(){
+    System.out.print("testIdentical2: ");
+    boolean[][] image1 = {{true, false, false, true},
+            {false, false, true, true},
+            {false, true, true, false},
+            {false, false, false, false}};
+    boolean[][] image2 = {{true, false, false, true},
+            {false, false, true, true},
+            {false, true, true, false},
+            {false, false, false, false}};
+    boolean expected = true;
+
+    boolean result = Fingerprint.identical(image1, image2);
+    if(result == expected){
+      System.out.println("OK");
+    }else{
+      System.out.println("ERROR");
+      System.out.print("Expected: " + expected + " ");
+      System.out.println("Computed: " + result);
+    }
+  }
+
+  /*
+    This function tests the functionalities of identical on a second dataset
+  */
+  public static void testIdentical3(){
+    System.out.print("testIdentical2: ");
+    boolean[][] image1 = {{true, false, false, true},
+            {false, false, true, true},
+            {false, true, true, false},
+            {false, false, false, false}};
+    boolean[][] image2 = {{true, false, false, true},
+            {false, false, true, true},
+            {false, true, true, false},
+            {false, false, false, true}};
+    boolean expected = false;
+
+    boolean result = Fingerprint.identical(image1, image2);
+    if(result == expected){
+      System.out.println("OK");
+    }else{
+      System.out.println("ERROR");
+      System.out.print("Expected: " + expected + " ");
+      System.out.println("Computed: " + result);
     }
   }
 
