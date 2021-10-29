@@ -268,8 +268,28 @@ public class Fingerprint {
      * <code>(row, col)</code>.
      */
     public static boolean[][] connectedPixels(boolean[][] image, int row, int col, int distance) {
-        //TODO implement
-        return null;
+        boolean[][] imageConnectedPixels = new boolean[image.length][image[0].length];
+        imageConnectedPixels[row][col] = true;
+        boolean foundNewConnectedPixels = true;
+
+        while(foundNewConnectedPixels){
+            foundNewConnectedPixels = false;
+            for(int rowImage = 0; rowImage < imageConnectedPixels.length; ++rowImage){
+                for(int columnImage = 0; columnImage < imageConnectedPixels[0].length; ++columnImage){
+                    if(isPixelBlack(image[rowImage][columnImage]) && (rowImage != row || columnImage != col) && !isPixelBlack(imageConnectedPixels[rowImage][columnImage])){
+                        //la condition ci dessous nous permet de savoir si notre pixel est à cote d'un pixel
+                        //dejà dans le tableau des pixels connectés car dans newImage les pixels connectés sont noirs.
+                        if(blackNeighbours(getNeighbours(imageConnectedPixels, rowImage, columnImage)) >= 1){
+                            if(Math.abs(rowImage - row) <= distance && Math.abs(columnImage - col) <= distance){
+                                imageConnectedPixels[rowImage][columnImage] = true;
+                                foundNewConnectedPixels = true;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        return imageConnectedPixels;
     }
 
     /**

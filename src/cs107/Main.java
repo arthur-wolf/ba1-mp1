@@ -26,9 +26,9 @@ public class Main {
     testIdentical1();
     testIdentical2();
     testIdentical3();
-    //testConnectedPixels1();
-    //testConnectedPixels2();
-    //testConnectedPixels3();
+    testConnectedPixels1();
+    testConnectedPixels2();
+    testConnectedPixels3();
     //testOrientation();
     //testApplyRotation();
     //testApplyTranslation();
