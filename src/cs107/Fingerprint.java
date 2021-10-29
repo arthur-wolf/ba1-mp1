@@ -176,6 +176,7 @@ public class Fingerprint {
    */
   public static boolean[][] thinningStep(boolean[][] image, int step) {
       //On crée une copie indépendante de image stockée dans newImage.
+      assert (image != null);
       boolean [][] newImage = new boolean[image.length][image[0].length];
       for(int i = 0; i < image.length; ++i){
           for(int j = 0; j < image[0].length; ++j){
@@ -193,12 +194,16 @@ public class Fingerprint {
               if (isBlackPixel(newImage[row][column]) && !areNeighboursNull(newImage, row, column)
                       && blackNeighbours(neighbours) >= 2 && blackNeighbours(neighbours) <= 6 && transitions(neighbours) == 1){
 
+                  if((row -1 ) >= 0){
+                      boolean P0 = newImage[row-1][column];
+                  }
+
                   boolean P0 = newImage[row-1][column];
                   boolean P2 = newImage[row][column+1];
                   boolean P4 = newImage[row+1][column];
                   boolean P6 = newImage[row][column-1];
 
-                  if(step == 0){        //Step 0
+                  if(step == 0){
                       if (!(isBlackPixel(P0) && isBlackPixel(P2) && isBlackPixel(P4))){
                           if (!(isBlackPixel(P2) && isBlackPixel(P4) && isBlackPixel(P6))){
                               //Le pixel respecte toutes les conditions de l'étape 1: on l'efface -> set en blanc.

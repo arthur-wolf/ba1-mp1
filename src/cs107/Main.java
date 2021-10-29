@@ -19,14 +19,14 @@ public class Main {
     //---------------------------
 	System.out.println("Uncomment the function calls in Main.main to test your implementation.");
 	System.out.println("The provided tests are not complete. You have to write your own tests.");
-    //testGetNeighbours();
-    //testBlackNeighbours1();
-    //testBlackNeighbours2();
-    //testTransition1();
-    //testTransition2();
-    //testIdentical1();
-    //testIdentical2();
-    //testIdentical3();
+    testGetNeighbours();
+    testBlackNeighbours1();
+    testBlackNeighbours2();
+    testTransition1();
+    testTransition2();
+    testIdentical1();
+    testIdentical2();
+    testIdentical3();
     //testConnectedPixels1();
     //testConnectedPixels2();
     //testConnectedPixels3();
@@ -54,7 +54,7 @@ public class Main {
     //testCompareFingerprints("1_1", "2_1", false); //expected match: false
 
     //compare 1_1 with all other images of the same finger
-    //testCompareAllFingerprints("1_1", 1, true);
+    testCompareAllFingerprints("1_1", 1, true);
 
     //compare 1_1 with all images of finger 2
     //testCompareAllFingerprints("1_1", 2, false);
@@ -468,7 +468,7 @@ public class Main {
    */
   public static void testCompareFingerprints(String name1, String name2, boolean expectedResult) {
 	    boolean[][] image1 = Helper.readBinary("resources/fingerprints/" + name1 + ".png");
-	    // Helper.show(Helper.fromBinary(image1), "Image1");
+	    Helper.show(Helper.fromBinary(image1), "Image1");
 	    boolean[][] skeleton1 = Fingerprint.thin(image1);
 	    //Helper.writeBinary("skeleton_" + name1 + ".png", skeleton1);
 	    List<int[]> minutiae1 = Fingerprint.extract(skeleton1);
