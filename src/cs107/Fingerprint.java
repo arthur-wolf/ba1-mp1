@@ -65,10 +65,8 @@ public class Fingerprint {
      */
 
     public static boolean[] getNeighbours(boolean[][] image, int row, int col) {
-        assert (image != null); // special case that is not expected (the image is supposed to have been checked
-        // earlier)
+        assert (image != null);
 
-        //On retourne null si la ligne ou la colonne n'appartiennent pas au tableau.
         if (row >= image.length || row < 0 || col >= image[0].length || col < 0) {
             return null;
         }
@@ -95,16 +93,8 @@ public class Fingerprint {
             int rowToTest = Integer.parseInt(coordsToCheck[i].split(":")[0]);
             int columnToTest = Integer.parseInt(coordsToCheck[i].split(":")[1]);
 
-          /*
-            Ici on vérifie que rowToTest est compris entre 0 et le nombre de lignes
-            Et que columnToTest est compris entre 0 et le nombre de colonnes
-           */
             if (rowToTest >= 0 && rowToTest <= (image.length - 1) && columnToTest >= 0 && columnToTest <= (image[rowToTest].length - 1)) {
-                if (isPixelBlack(image[rowToTest][columnToTest])) {
-                    result[i] = true;
-                } else {
-                    result[i] = false;
-                }
+                result[i] = isPixelBlack(image[rowToTest][columnToTest]);
             } else {
                 //Le pixel n'appartient pas à image (outOfBounds) mais on considère qu'il est blanc --> false ;
                 result[i] = false;
@@ -184,10 +174,10 @@ public class Fingerprint {
     /**
      * Returns <code>true</code> if the pixel fulfils all the conditions.
      *
-     * @param image array containing each pixel's boolean value.
-     * @param row int containing pixel's row value.
+     * @param image  array containing each pixel's boolean value.
+     * @param row    int containing pixel's row value.
      * @param column int containing pixel's column value.
-     * @param step int containing 0 or 1 corresponding to the step 1 or 2.
+     * @param step   int containing 0 or 1 corresponding to the step 1 or 2.
      * @return <code>True</code> if all the conditions are fulfilled for the pixel, <code>false</code>
      * otherwise.
      */
@@ -205,15 +195,11 @@ public class Fingerprint {
 
             if (step == 0) {
                 if (!isPixelBlack(P0) || !isPixelBlack(P2) || !isPixelBlack(P4)) {
-                    if (!isPixelBlack(P2) || !isPixelBlack(P4) || !isPixelBlack(P6)) {
-                        return true;
-                    }
+                    return (!isPixelBlack(P2) || !isPixelBlack(P4) || !isPixelBlack(P6));
                 }
             } else if (step == 1) {
                 if (!isPixelBlack(P0) || !isPixelBlack(P2) || !isPixelBlack(P6)) {
-                    if (!isPixelBlack(P0) || !isPixelBlack(P4) || !isPixelBlack(P6)) {
-                        return true;
-                    }
+                    return (!isPixelBlack(P0) || !isPixelBlack(P4) || !isPixelBlack(P6));
                 }
             }
         }
@@ -272,19 +258,19 @@ public class Fingerprint {
         imageConnectedPixels[row][col] = true;
         boolean foundNewConnectedPixels = true;
 
-        while(foundNewConnectedPixels){
+        while (foundNewConnectedPixels) {
             foundNewConnectedPixels = false;
-            for(int rowImage = 0; rowImage < imageConnectedPixels.length; ++rowImage){
-                for(int columnImage = 0; columnImage < imageConnectedPixels[0].length; ++columnImage){
-                    if(isPixelBlack(image[rowImage][columnImage]) && (rowImage != row || columnImage != col) && !isPixelBlack(imageConnectedPixels[rowImage][columnImage])){
-                        //la condition ci dessous nous permet de savoir si notre pixel est à cote d'un pixel
-                        //dejà dans le tableau des pixels connectés car dans newImage les pixels connectés sont noirs.
-                        if(blackNeighbours(getNeighbours(imageConnectedPixels, rowImage, columnImage)) >= 1){
-                            if(Math.abs(rowImage - row) <= distance && Math.abs(columnImage - col) <= distance){
-                                imageConnectedPixels[rowImage][columnImage] = true;
-                                foundNewConnectedPixels = true;
-                            }
-                        }
+            for (int rowImage = 0; rowImage < imageConnectedPixels.length; ++rowImage) {
+                for (int columnImage = 0; columnImage < imageConnectedPixels[0].length; ++columnImage) {
+                    if (isPixelBlack(image[rowImage][columnImage]) && (rowImage != row || columnImage != col)
+                            && !isPixelBlack(imageConnectedPixels[rowImage][columnImage])
+                            && blackNeighbours(getNeighbours(imageConnectedPixels, rowImage, columnImage)) >= 1
+                            && Math.abs(rowImage - row) <= (distance + 1 / 2)
+                            && Math.abs(columnImage - col) <= (distance + 1 / 2)) {
+                        //TODO: check distance ou distance +1/2
+
+                        imageConnectedPixels[rowImage][columnImage] = true;
+                        foundNewConnectedPixels = true;
                     }
                 }
             }
@@ -297,34 +283,34 @@ public class Fingerprint {
      *
      * @param connectedPixels the result of
      *                        {@link #connectedPixels(boolean[][], int, int, int)}.
-     * @param rowm             the row of the minutia.
-     * @param colm             the col of the minutia.
+     * @param rowm            the row of the minutia.
+     * @param colm            the col of the minutia.
      * @return the slope.
      */
     public static double computeSlope(boolean[][] connectedPixels, int rowm, int colm) {
-        double sumX2 = 0;       //double pour éviter l'erreur "integer division in floating-point context"
-        double sumY2 = 0;
-        double sumXY = 0;
+        double sumX2 = 0.0;       //double pour éviter l'erreur "integer division in floating-point context"
+        double sumY2 = 0.0;
+        double sumXY = 0.0;
         int x;
         int y;
 
-        for (int row = 0; row < connectedPixels.length; ++row){
-            for (int col = 0; col < connectedPixels[0].length; ++col){
-                if (isPixelBlack(connectedPixels[row][col])){
+        for (int row = 0; row < connectedPixels.length; ++row) {
+            for (int col = 0; col < connectedPixels[0].length; ++col) {
+                if (isPixelBlack(connectedPixels[row][col])) {
                     x = col - colm;
-                    y = rowm -row;
-                    sumX2 += Math.pow(x, 2);
-                    sumY2 += Math.pow(y, 2);
-                    sumXY += x*y;
+                    y = rowm - row;
+                    sumX2 += Math.pow(x, 2.0);
+                    sumY2 += Math.pow(y, 2.0);
+                    sumXY += x * y;
                 }
             }
         }
 
-        if(sumX2 == 0){ //Cas particulier : ligne verticale
+        if (sumX2 == 0.0) { //Cas particulier : ligne verticale
             return Double.POSITIVE_INFINITY;
-        } else if (sumX2 >= sumY2){
+        } else if (sumX2 >= sumY2) {
             return sumXY / sumX2;
-        } else{ //SumX2 < sumY2
+        } else { //SumX2 < sumY2
             return sumY2 / sumXY;
         }
     }

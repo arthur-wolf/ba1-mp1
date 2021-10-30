@@ -29,7 +29,7 @@ public class Main {
     //testOrientation();
     //testApplyRotation();
     //testApplyTranslation();
-    //testThin();
+    testThin();
     //testWithSkeleton();
     
     //testDrawSkeleton("1_1"); //draw skeleton of fingerprint 1_1.png
@@ -226,20 +226,20 @@ public class Main {
                           {false, false, false, false},
                           {false, false, true, false},
                           {false, false, false, false}};
-    final boolean  expected1 = false;
+    final boolean expected1 = false;
     boolean result1 = Fingerprint.identical(image11, image21);
     printResultsIdentical(result1, expected1);
 
     //TEST 2
     System.out.print("testIdentical2: ");
     boolean[][] image12 = {{true, false, false, true},
-            {false, false, true, true},
-            {false, true, true, false},
-            {false, false, false, false}};
+                          {false, false, true, true},
+                          {false, true, true, false},
+                          {false, false, false, false}};
     boolean[][] image22 = {{true, false, false, true},
-            {false, false, true, true},
-            {false, true, true, false},
-            {false, false, false, false}};
+                          {false, false, true, true},
+                          {false, true, true, false},
+                          {false, false, false, false}};
     final boolean expected2 = true;
 
     boolean result2 = Fingerprint.identical(image12, image22);
@@ -248,13 +248,13 @@ public class Main {
     //TEST 3
     System.out.print("testIdentical2: ");
     boolean[][] image13 = {{true, false, false, true},
-            {false, false, true, true},
-            {false, true, true, false},
-            {false, false, false, false}};
+                          {false, false, true, true},
+                          {false, true, true, false},
+                          {false, false, false, false}};
     boolean[][] image23 = {{true, false, false, true},
-            {false, false, true, true},
-            {false, true, true, false},
-            {false, false, false, true}};
+                          {false, false, true, true},
+                          {false, true, true, false},
+                          {false, false, false, true}};
     final boolean expected3 = false;
 
     boolean result3 = Fingerprint.identical(image13, image23);
