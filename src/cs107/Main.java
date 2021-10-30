@@ -25,6 +25,7 @@ public class Main {
     testTransition();
     testIdentical();
     testConnectedPixels();
+    testComputeSlope();
     //testOrientation();
     //testApplyRotation();
     //testApplyTranslation();
@@ -155,9 +156,6 @@ public class Main {
       System.out.println("Computed: " + result);
     }
   }
-
-
-
 
   /**
     This function tests the functionalities of transition on 4 different datasets
@@ -370,6 +368,98 @@ public class Main {
                          {false, false, false, false}};
     int angle = Fingerprint.computeOrientation(image, 2, 1, 3);
     System.out.println("Expected angle: 35\t Computed angle: " + angle);
+  }
+
+  /**
+   * This function tests Fingerprint.computeSlope() with 5 different datasets
+   */
+  public static void testComputeSlope(){
+    //TEST 1
+    System.out.print("testComputeSlope1: "); //Case increasing linear curve
+    boolean[][] connectedPixels1 = {{false, false, false, false, false},
+                                    {false, false, false, true, false},
+                                    {false, false, true, false, false},
+                                    {false, true, false, false, false},
+                                    {false, false, false, false, false}};
+    int rowm1 = 3;
+    int colm1 = 1;
+    double coeff1 = Fingerprint.computeSlope(connectedPixels1, rowm1, colm1);
+    double expected1 = 1.0;
+    printResultComputeSlope(coeff1, expected1);
+
+    //TEST 2
+    System.out.print("testComputeSlope2: "); // Case a = constant
+    boolean[][] connectedPixels2 = {{false, false, false, false, false},
+                                    {true, true, true, true, false},
+                                    {false, false, false, false, false},
+                                    {false, false, false, false, false},
+                                    {false, false, false, false, false}};
+    int rowm2 = 1;
+    int colm2 = 1;
+    double coeff2 = Fingerprint.computeSlope(connectedPixels2, rowm2, colm2);
+    double expected2 = 0;
+    printResultComputeSlope(coeff2, expected2);
+
+    //TEST 3
+    System.out.print("testComputeSlope3: "); // Case Infinity
+    boolean[][] connectedPixels3 = {{false, false, false, false, false},
+                                    {false, true, false, false, false},
+                                    {false, true, false, false, false},
+                                    {false, true, false, false, false},
+                                    {false, false, false, false, false}};
+    int rowm3 = 3;
+    int colm3 = 1;
+    double coeff3 = Fingerprint.computeSlope(connectedPixels3, rowm3, colm3);
+    double expected3 = Double.POSITIVE_INFINITY;
+    printResultComputeSlope(coeff3, expected3);
+
+    //TEST 4
+    System.out.print("testComputeSlope4: "); // Case decreasing linear curve
+    boolean[][] connectedPixels4 = {{false, false, false, false, false},
+                                    {true, false, false, false, false},
+                                    {true, true, false, false, false},
+                                    {false, true, false, false, false},
+                                    {false, false, false, false, false}};
+    int rowm4 = 1;
+    int colm4 = 0;
+    double coeff4 = Fingerprint.computeSlope(connectedPixels4, rowm4, colm4);
+    double expected4 = -2.0;
+    printResultComputeSlope(coeff4, expected4);
+
+    //TEST 5
+    System.out.print("testComputeSlope5: "); // Case bigger array
+    boolean[][] connectedPixels5 = {{false, false, false, false, false, false, false, false, false},
+                                    {false, false, false, false, false, false, false, false, true},
+                                    {false, false, false, false, false, false, true, false, false,},
+                                    {false, false, false, false, true, false, false, false, false},
+                                    {false, false, true, false, false, false, false, false, false},
+                                    {true, false, false, false, false, false, false, false, false},
+                                    {false, false, false, false, false, false, false, false, false}};
+    int rowm5 = 4;
+    int colm5 = 0;
+    double coeff5 = Fingerprint.computeSlope(connectedPixels5, rowm5, colm5);
+    double expected5 = 1/3.0;
+    printResultComputeSlope(coeff5, expected5);
+
+    System.out.println();
+  }
+
+  /**
+   * This functions allows to clarify the code of the test for computeSlope() above
+   * It compares the Array that's outputted by Fingerprint.computeSlope() and the expected output
+   * @param coeff --> Fingerprint.computeSlope() output
+   * @param expected --> expected output
+   */
+  public static void printResultComputeSlope(double coeff, double expected){
+    if (coeff == expected){
+      System.out.println("OK");
+    } else {
+      System.out.println("ERROR");
+      System.out.print("Expected: ");
+      System.out.println(expected);
+      System.out.print("Computed: ");
+      System.out.println(coeff);
+    }
   }
 
   /**

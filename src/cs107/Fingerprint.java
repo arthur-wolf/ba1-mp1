@@ -241,7 +241,7 @@ public class Fingerprint {
      */
     public static boolean[][] thin(boolean[][] image) {
         boolean[][] newImage = copyList(image);
-        boolean isChangesNeeded = true;
+        boolean isChangesNeeded;
 
         do {
             boolean[][] resultStep1 = thinningStep(newImage, 0);
@@ -297,13 +297,36 @@ public class Fingerprint {
      *
      * @param connectedPixels the result of
      *                        {@link #connectedPixels(boolean[][], int, int, int)}.
-     * @param row             the row of the minutia.
-     * @param col             the col of the minutia.
+     * @param rowm             the row of the minutia.
+     * @param colm             the col of the minutia.
      * @return the slope.
      */
-    public static double computeSlope(boolean[][] connectedPixels, int row, int col) {
-        //TODO implement
-        return 0;
+    public static double computeSlope(boolean[][] connectedPixels, int rowm, int colm) {
+        double sumX2 = 0;       //double pour éviter l'erreur "integer division in floating-point context"
+        double sumY2 = 0;
+        double sumXY = 0;
+        int x;
+        int y;
+
+        for (int row = 0; row < connectedPixels.length; ++row){
+            for (int col = 0; col < connectedPixels[0].length; ++col){
+                if (isPixelBlack(connectedPixels[row][col])){
+                    x = col - colm;
+                    y = rowm -row;
+                    sumX2 += Math.pow(x, 2);
+                    sumY2 += Math.pow(y, 2);
+                    sumXY += x*y;
+                }
+            }
+        }
+
+        if(sumX2 == 0){ //Cas particulier ligne verticale
+            return Double.POSITIVE_INFINITY;
+        } else if (sumX2 >= sumY2){
+            return sumXY / sumX2;
+        } else{ //SumX2 < sumY2
+            return sumY2 / sumXY;
+        }
     }
 
     /**
