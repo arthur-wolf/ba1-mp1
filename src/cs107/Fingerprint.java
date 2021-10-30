@@ -320,7 +320,7 @@ public class Fingerprint {
             }
         }
 
-        if(sumX2 == 0){ //Cas particulier ligne verticale
+        if(sumX2 == 0){ //Cas particulier : ligne verticale
             return Double.POSITIVE_INFINITY;
         } else if (sumX2 >= sumY2){
             return sumXY / sumX2;
