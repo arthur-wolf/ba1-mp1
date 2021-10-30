@@ -357,8 +357,17 @@ public class Fingerprint {
      * @see #thin(boolean[][])
      */
     public static List<int[]> extract(boolean[][] image) {
-        //TODO implement
-        return null;
+        List<int[]> minutiae = new ArrayList<int[]>();
+        for (int i = 1; i < image.length -1; ++i){
+            for (int j = 1; j < image[1].length - 1; j++){
+                if (isMinutiae(image[i][j], getNeighbours(image, i ,j))){
+                    int[] values = {i , j, computeOrientation(image, i,j, ORIENTATION_DISTANCE)};
+                    minutiae.add(values);
+                }
+            }
+        }
+        return minutiae;
+        //todo --> tests work except for the angle, it'll work when computeAngle and computeOrientation will be written
     }
 
     /**
@@ -477,6 +486,11 @@ public class Fingerprint {
         return getNeighbours(image, row, column) == null; //return true si neighbours[] est null
     }
 
+    /**
+     * Copies an already existing array into a new array
+     * @param list existing array
+     * @return the copied array
+     */
     public static boolean[][] copyList(boolean[][] list) {
         boolean[][] newList = new boolean[list.length][list[0].length];
         for (int i = 0; i < list.length; ++i) {
@@ -485,5 +499,15 @@ public class Fingerprint {
             }
         }
         return newList;
+    }
+
+    /**
+     * Checks whether a pixel is a minutia
+     * @param pixel coordinates of the pixel in the image
+     * @param neighbours 8 neighbours of the pixel
+     * @return true if the pixel is a minutia
+     */
+    public static boolean isMinutiae(boolean pixel, boolean[] neighbours){
+        return (isPixelBlack(pixel) && (transitions(neighbours) == 1 || transitions(neighbours) == 3));
     }
 }

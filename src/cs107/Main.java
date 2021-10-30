@@ -30,7 +30,7 @@ public class Main {
     //testApplyRotation();
     //testApplyTranslation();
     testThin();
-    //testWithSkeleton();
+    testWithSkeleton();
     
     //testDrawSkeleton("1_1"); //draw skeleton of fingerprint 1_1.png
     //testDrawSkeleton("1_2"); //draw skeleton of fingerprint 1_2.png
@@ -99,8 +99,8 @@ public class Main {
   /**
    * This functions allows to clarify the code of the test for getNeighbours() above
    * It compares the Array that's outputted by Fingerprint.getNeighbours() and the expected output
-   * @param neighbours --> Fingerprint.getNeighbours() output
-   * @param expected --> expected output
+   * @param neighbours Fingerprint.getNeighbours() output
+   * @param expected expected output
    */
   public static void printResultsGetNeighbours(boolean[] neighbours, boolean[] expected){
     if (arrayEqual(neighbours, expected)) {
@@ -144,8 +144,8 @@ public class Main {
   /**
    * This functions allows to clarify the code of the test for blackNeighbours() above
    * It compares the Array that's outputted by Fingerprint.blackNeighbours() and the expected output
-   * @param result --> Fingerprint.blackNeighbours() output
-   * @param expected --> expected output
+   * @param result  Fingerprint.blackNeighbours() output
+   * @param expected  expected output
    */
   public static void printResultsBlackNeighbours(int result, int expected){
     if (result == expected) {
@@ -199,8 +199,8 @@ public class Main {
   /**
    * This functions allows to clarify the code of the test for transitions() above
    * It compares the Array that's outputted by Fingerprint.transitions() and the expected output
-   * @param result --> Fingerprint.transitions() output
-   * @param expected --> expected output
+   * @param result Fingerprint.transitions() output
+   * @param expected expected output
    */
   public static void printResultsTransition(int result, int expected){
     if(result == expected){
@@ -266,8 +266,8 @@ public class Main {
   /**
    * This functions allows to clarify the code of the test for identical() above
    * It compares the Array that's outputted by Fingerprint.identical() and the expected output
-   * @param result --> Fingerprint.identical() output
-   * @param expected --> expected output
+   * @param result Fingerprint.identical() output
+   * @param expected expected output
    */
   public static void printResultsIdentical(boolean result, boolean expected){
     if(result == expected){
@@ -342,8 +342,8 @@ public class Main {
   /**
    * This functions allows to clarify the code of the test for connectedPixels above
    * It compares the Array that's outputted by the written function and the expected output
-   * @param connectedPixels --> Array outputted by the written function
-   * @param expected --> expected output
+   * @param connectedPixels Array outputted by the written function
+   * @param expected expected output
    */
   public static void printResultConnectedPixels(boolean[][] connectedPixels, boolean[][] expected){
     if (arrayEqual(connectedPixels, expected)){
@@ -447,8 +447,8 @@ public class Main {
   /**
    * This functions allows to clarify the code of the test for computeSlope() above
    * It compares the Array that's outputted by Fingerprint.computeSlope() and the expected output
-   * @param coeff --> Fingerprint.computeSlope() output
-   * @param expected --> expected output
+   * @param coeff Fingerprint.computeSlope() output
+   * @param expected expected output
    */
   public static void printResultComputeSlope(double coeff, double expected){
     if (coeff == expected){
@@ -470,26 +470,31 @@ public class Main {
     // minutia, centerRow, centerCol, rotation)
     int[] minutia = new int[] {1, 3, 10};
     int[] result = Fingerprint.applyRotation(minutia, 0, 0, 0);
+    assert result != null;
     System.out.println("Expected: 1,3,10");
     System.out.print("Computed: ");
     printArray(result);
 
     result = Fingerprint.applyRotation(minutia, 10, 5, 0);
+    assert result != null;
     System.out.println("Expected: 1,3,10");
     System.out.print("Computed: ");
     printArray(result);
 
     result = Fingerprint.applyRotation(minutia, 0, 0, 90);
+    assert result != null;
     System.out.println("Expected: -3,1,100");
     System.out.print("Computed: ");
     printArray(result);
 
     result = Fingerprint.applyRotation(new int[] {0, 3, 10}, 0, 0, 90);
+    assert result != null;
     System.out.println("Expected: -3,0,100");
     System.out.print("Computed: ");
     printArray(result);
 
     result = Fingerprint.applyRotation(new int[] {3, 0, 10}, 0, 0, 90);
+    assert result != null;
     System.out.println("Expected: 0,3,100");
     System.out.print("Computed: ");
     printArray(result);
@@ -502,11 +507,13 @@ public class Main {
   public static void testApplyTranslation() {
     // minutia, rowTranslation, colTranslation)
     int[] result = Fingerprint.applyTranslation(new int[] {1, 3, 10}, 0, 0);
+    assert result != null;
     System.out.println("Expected: 1,3,10");
     System.out.print("Computed: ");
     printArray(result);
 
     result = Fingerprint.applyTranslation(new int[] {1, 3, 10}, 10, 5);
+    assert result != null;
     System.out.println("Expected: -9,-2,10");
     System.out.print("Computed: ");
     printArray(result);
@@ -549,6 +556,7 @@ public class Main {
    */
   public static void testWithSkeleton() {
     boolean[][] skeleton1 = Helper.readBinary("resources/test_inputs/skeletonTest.png");
+    assert skeleton1 != null;
     List<int[]> minutiae1 = Fingerprint.extract(skeleton1);
     List<int[]> expected = new ArrayList<int[]>();
     expected.add(new int[] {39, 21, 264});
@@ -584,6 +592,7 @@ public class Main {
    */
   public static void testCompareFingerprints(String name1, String name2, boolean expectedResult) {
 	    boolean[][] image1 = Helper.readBinary("resources/fingerprints/" + name1 + ".png");
+	    assert image1 != null;
 	    Helper.show(Helper.fromBinary(image1), "Image1");
 	    boolean[][] skeleton1 = Fingerprint.thin(image1);
 	    //Helper.writeBinary("skeleton_" + name1 + ".png", skeleton1);
