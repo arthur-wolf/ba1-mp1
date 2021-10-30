@@ -19,20 +19,16 @@ public class Main {
     //---------------------------
 	System.out.println("Uncomment the function calls in Main.main to test your implementation.");
 	System.out.println("The provided tests are not complete. You have to write your own tests.");
+    System.out.println();
     testGetNeighbours();
-    testBlackNeighbours1();
-    testBlackNeighbours2();
+    testBlackNeighbours();
     testTransition();
-    testIdentical1();
-    testIdentical2();
-    testIdentical3();
-    testConnectedPixels1();
-    testConnectedPixels2();
-    testConnectedPixels3();
+    testIdentical();
+    testConnectedPixels();
     //testOrientation();
     //testApplyRotation();
     //testApplyTranslation();
-    testThin();
+    //testThin();
     //testWithSkeleton();
     
     //testDrawSkeleton("1_1"); //draw skeleton of fingerprint 1_1.png
@@ -69,11 +65,43 @@ public class Main {
    * getNeighbours. You are free to modify and/or delete it.
    */
   public static void testGetNeighbours() {
+    //TEST 1
     System.out.print("testGetNeighbours 1: ");
     boolean[][] image = {{true}};
-    boolean[] neighbours = Fingerprint.getNeighbours(image, 0, 0);
-    boolean[] expected = {false, false, false, false,
+    boolean[] neighbours1 = Fingerprint.getNeighbours(image, 0, 0);
+    boolean[] expected1 = {false, false, false, false,
                           false, false, false, false};
+    printResultsGetNeighbours(neighbours1, expected1);
+
+    //TEST 2
+    System.out.print("testGetNeighbours 2: ");
+    boolean[][] image2 = {{true, true}};
+    boolean[] neighbours2 = Fingerprint.getNeighbours(image2, 0, 0);
+    boolean[] expected2 = {false, false, true,  false,
+                           false, false, false, false};
+    printResultsGetNeighbours(neighbours2, expected2);
+
+    //TEST 3
+    System.out.print("testGetNeighbours 3: ");
+    boolean[][] image3 = {{true, true, true, true},
+                          {true, false, false, true},
+                          {true, false, false, true},
+                          {true, true, true, true}};
+    boolean[] neighbours3 = Fingerprint.getNeighbours(image3, 1, 1);
+    boolean[] expected3 = {true, true, false,  false,
+                          false, true, true, true};
+    printResultsGetNeighbours(neighbours3, expected3);
+
+    System.out.println();
+  }
+
+  /**
+   * This functions allows to clarify the code of the test for getNeighbours() above
+   * It compares the Array that's outputted by Fingerprint.getNeighbours() and the expected output
+   * @param neighbours --> Fingerprint.getNeighbours() output
+   * @param expected --> expected output
+   */
+  public static void printResultsGetNeighbours(boolean[] neighbours, boolean[] expected){
     if (arrayEqual(neighbours, expected)) {
       System.out.println("OK");
     } else {
@@ -83,211 +111,167 @@ public class Main {
       System.out.print("Computed: ");
       printArray(neighbours);
     }
-
-    System.out.print("testGetNeighbours 2: ");
-    boolean[][] image2 = {{true, true}};
-    boolean[] neighbours2 = Fingerprint.getNeighbours(image2, 0, 0);
-    boolean[] expected2 = {false, false, true,  false,
-                           false, false, false, false};
-    if (arrayEqual(neighbours2, expected2)) {
-      System.out.println("OK");
-    } else {
-      System.out.println("ERROR");
-      System.out.print("Expected: ");
-      printArray(expected2);
-      System.out.print("Computed: ");
-      printArray(neighbours2);
-    }
-
-    System.out.print("testGetNeighbours 3: ");
-    boolean[][] image3 = {{true, true, true, true},
-                          {true, false, false, true},
-                          {true, false, false, true},
-                          {true, true, true, true}};
-    boolean[] neighbours3 = Fingerprint.getNeighbours(image3, 1, 1);
-    boolean[] expected3 = {true, true, false,  false,
-                          false, true, true, true};
-    if (arrayEqual(neighbours3, expected3)) {
-      System.out.println("OK");
-    } else {
-      System.out.println("ERROR");
-      System.out.print("Expected: ");
-      printArray(expected3);
-      System.out.print("Computed: ");
-      printArray(neighbours3);
-    }
   }
 
-  /*
-    This function tests the functionalities of blackNeighbours on a first dataset
+  /**
+    This function tests the functionalities of blackNeighbours on two different datasets
    */
-  public static void testBlackNeighbours1(){
+  public static void testBlackNeighbours() {
+    //TEST 1
     System.out.print("testBlackNeighbours1: ");
-    boolean[] neighbours = {false, true, true,
-                            false, false,
-                            false, true, false};
-    int expected = 3;
+    boolean[] neighbours1 = {false, true, true,
+            false, false,
+            false, true, false};
+    int expected1 = 3;
 
-    int result = Fingerprint.blackNeighbours(neighbours);
-    if(result == expected){
-      System.out.println("OK");
-    }else{
-      System.out.println("ERROR");
-      System.out.print("Expected: " + expected + " ");
-      System.out.println("Computed: " + result);
-    }
-  }
+    int result1 = Fingerprint.blackNeighbours(neighbours1);
+    printResultsBlackNeighbours(result1, expected1);
 
-  /*
-    This function tests the functionalities of blackNeighbours on a second dataset
-   */
-  public static void testBlackNeighbours2(){
+    //TEST 2
     System.out.print("testBlackNeighbours2: ");
-    boolean[] neighbours = {true, true, false,
-                            false, true,
-                            false, false, true};
-    int expected = 4;
+    boolean[] neighbours2 = {true, true, false,
+            false, true,
+            false, false, true};
+    int expected2 = 4;
 
-    int result = Fingerprint.blackNeighbours(neighbours);
-    if(result == expected){
+    int result2 = Fingerprint.blackNeighbours(neighbours2);
+    printResultsBlackNeighbours(result2, expected2);
+
+    System.out.println();
+  }
+
+  /**
+   * This functions allows to clarify the code of the test for blackNeighbours() above
+   * It compares the Array that's outputted by Fingerprint.blackNeighbours() and the expected output
+   * @param result --> Fingerprint.blackNeighbours() output
+   * @param expected --> expected output
+   */
+  public static void printResultsBlackNeighbours(int result, int expected){
+    if (result == expected) {
       System.out.println("OK");
-    }else{
+    } else {
       System.out.println("ERROR");
       System.out.print("Expected: " + expected + " ");
       System.out.println("Computed: " + result);
     }
   }
 
-  /*
-    This function tests the functionalities of transition on a first dataset
+
+
+
+  /**
+    This function tests the functionalities of transition on 4 different datasets
   */
   public static void testTransition(){
+    //TEST 1
     System.out.print("testTransition1: ");
-    boolean[] neighbours = {false, true, true,
-                            false, false,
-                            false, true, false, false};
-    int expected = 2;
+    boolean[] neighbours = {false, true, true, false, false, false, true, false, false};
+    int expected1 = 2;
 
-    int result = Fingerprint.transitions(neighbours);
-    if(result == expected){
-      System.out.println("OK");
-    }else{
-      System.out.println("ERROR");
-      System.out.print("Expected: " + expected + " ");
-      System.out.println("Computed: " + result);
-    }
+    int result1 = Fingerprint.transitions(neighbours);
+    printResultsTransition(result1, expected1);
 
+    //TEST 2
     System.out.print("testTransition2: ");
-    boolean[] neighbours2 = {true, false, true,
-            false, true,
-            false, true, false, false};
+    boolean[] neighbours2 = {true, false, true, false, true, false, true, false, false};
     int expected2 = 4;
 
     int result2 = Fingerprint.transitions(neighbours2);
-    if(result2 == expected2){
-      System.out.println("OK");
-    }else{
-      System.out.println("ERROR");
-      System.out.print("Expected: " + expected2 + " ");
-      System.out.println("Computed: " + result2);
-    }
+    printResultsTransition(result2, expected2);
 
+    //TEST 3
     System.out.print("testTransition3: ");
-    boolean[] neighbours3 = {false, false, true,
-            false, true,
-            false, true, true};
+    boolean[] neighbours3 = {false, false, true, false, true, false, true, true};
     int expected3 = 3;
 
     int result3 = Fingerprint.transitions(neighbours3);
-    if(result3 == expected3){
-      System.out.println("OK");
-    }else{
-      System.out.println("ERROR");
-      System.out.print("Expected: " + expected3 + " ");
-      System.out.println("Computed: " + result3);
-    }
+    printResultsTransition(result3, expected3);
 
+    //TEST 4
     System.out.print("testTransition4: ");
-    boolean[] neighbours4 = {false, true, true,
-            false, false,
-            false, true, false, false};
+    boolean[] neighbours4 = {false, true, true, false, false, false, true, false, false};
     int expected4 = 2;
 
     int result4 = Fingerprint.transitions(neighbours4);
-    if(result4 == expected4){
+    printResultsTransition(result4, expected4);
+
+    System.out.println();
+  }
+
+  /**
+   * This functions allows to clarify the code of the test for transitions() above
+   * It compares the Array that's outputted by Fingerprint.transitions() and the expected output
+   * @param result --> Fingerprint.transitions() output
+   * @param expected --> expected output
+   */
+  public static void printResultsTransition(int result, int expected){
+    if(result == expected){
       System.out.println("OK");
     }else{
       System.out.println("ERROR");
-      System.out.print("Expected: " + expected4 + " ");
-      System.out.println("Computed: " + result4);
+      System.out.print("Expected: " + expected + " ");
+      System.out.println("Computed: " + result);
     }
   }
 
-  /*
-    This function tests the functionalities of transition on a second dataset
+  /**
+    This function tests the functionalities of testIdentical on 3 different datasets
   */
-  public static void testIdentical1(){
+  public static void testIdentical(){
+    //TEST 1
     System.out.print("testIdentical1: ");
-    boolean[][] image1 = {{false, true, false, true},
+    boolean[][] image11 = {{false, true, false, true},
                           {true, false, true, false},
                           {false, true, true, false},
                           {true, false, false, true}};
-    boolean[][] image2 = {{true, true, true, true},
+    boolean[][] image21 = {{true, true, true, true},
                           {false, false, false, false},
                           {false, false, true, false},
                           {false, false, false, false}};
-    boolean expected = false;
-    boolean result = Fingerprint.identical(image1, image2);
-    if(result == expected){
-      System.out.println("OK");
-    }else{
-      System.out.println("ERROR");
-      System.out.print("Expected: " + expected + " ");
-      System.out.println("Computed: " + result);
-    }
-  }
+    final boolean  expected1 = false;
+    boolean result1 = Fingerprint.identical(image11, image21);
+    printResultsIdentical(result1, expected1);
 
-  /*
-    This function tests the functionalities of identical on a second dataset
-  */
-  public static void testIdentical2(){
+    //TEST 2
     System.out.print("testIdentical2: ");
-    boolean[][] image1 = {{true, false, false, true},
+    boolean[][] image12 = {{true, false, false, true},
             {false, false, true, true},
             {false, true, true, false},
             {false, false, false, false}};
-    boolean[][] image2 = {{true, false, false, true},
+    boolean[][] image22 = {{true, false, false, true},
             {false, false, true, true},
             {false, true, true, false},
             {false, false, false, false}};
-    boolean expected = true;
+    final boolean expected2 = true;
 
-    boolean result = Fingerprint.identical(image1, image2);
-    if(result == expected){
-      System.out.println("OK");
-    }else{
-      System.out.println("ERROR");
-      System.out.print("Expected: " + expected + " ");
-      System.out.println("Computed: " + result);
-    }
-  }
+    boolean result2 = Fingerprint.identical(image12, image22);
+    printResultsIdentical(result2, expected2);
 
-  /*
-    This function tests the functionalities of identical on a second dataset
-  */
-  public static void testIdentical3(){
+    //TEST 3
     System.out.print("testIdentical2: ");
-    boolean[][] image1 = {{true, false, false, true},
+    boolean[][] image13 = {{true, false, false, true},
             {false, false, true, true},
             {false, true, true, false},
             {false, false, false, false}};
-    boolean[][] image2 = {{true, false, false, true},
+    boolean[][] image23 = {{true, false, false, true},
             {false, false, true, true},
             {false, true, true, false},
             {false, false, false, true}};
-    boolean expected = false;
+    final boolean expected3 = false;
 
-    boolean result = Fingerprint.identical(image1, image2);
+    boolean result3 = Fingerprint.identical(image13, image23);
+    printResultsIdentical(result3, expected3);
+
+    System.out.println();
+  }
+
+  /**
+   * This functions allows to clarify the code of the test for identical() above
+   * It compares the Array that's outputted by Fingerprint.identical() and the expected output
+   * @param result --> Fingerprint.identical() output
+   * @param expected --> expected output
+   */
+  public static void printResultsIdentical(boolean result, boolean expected){
     if(result == expected){
       System.out.println("OK");
     }else{
@@ -301,70 +285,70 @@ public class Main {
    * This function is here to help you test the functionalities of
    * connectedPixels. You are free to modify and/or delete it.
    */
-  public static void testConnectedPixels1() {
+  public static void testConnectedPixels() {
+    //TEST 1
     System.out.print("testConnectedPixels1: ");
-    boolean[][] image = {{true, false, false, true},
-                         {false, false, true, true},
-                         {false, true, true, false},
-                         {false, false, false, false}};
-    boolean[][] expected = {{false, false, false, true},
-                            {false, false, true, true},
-                            {false, true, true, false},
-                            {false, false, false, false}};
-    boolean[][] connectedPixels = Fingerprint.connectedPixels(image, 2, 1, 10);
-    if (arrayEqual(connectedPixels, expected)) {
-      System.out.println("OK");
-    } else {
-      System.out.println("ERROR");
-      System.out.print("Expected: ");
-      printArray(expected);
-      System.out.print("Computed: ");
-      printArray(connectedPixels);
-    }
-  }
+    boolean[][] image1 = {{true, false, false, true},
+                          {false, false, true, true},
+                          {false, true, true, false},
+                          {false, false, false, false}};
+    boolean[][] expected1 = {{false, false, false, true},
+                             {false, false, true, true},
+                             {false, true, true, false},
+                             {false, false, false, false}};
+    boolean[][] connectedPixels1 = Fingerprint.connectedPixels(image1, 2, 1, 10);
+    printResultConnectedPixels(connectedPixels1, expected1);
 
-  /**
-   * This function is here to help you test the functionalities of
-   * connectedPixels. You are free to modify and/or delete it.
-   */
-  public static void testConnectedPixels2() {
+    //TEST 2
     System.out.print("testConnectedPixels2: ");
-    boolean[][] image = {{true, false, false, true},
-                         {false, false, true, true},
-                         {false, true, true, false},
-                         {false, false, false, false}};
-    boolean[][] expected = {{false, false, false, false},
-                            {false, false, true,  false},
-                            {false, true,  true,  false},
-                            {false, false, false, false}};
-    boolean[][] connectedPixels = Fingerprint.connectedPixels(image, 2, 1, 1);
-    if (arrayEqual(connectedPixels, expected)) {
-      System.out.println("OK");
-    } else {
-      System.out.println("ERROR");
-      System.out.print("Expected: ");
-      printArray(expected);
-      System.out.print("Computed: ");
-      printArray(connectedPixels);
-    }
-  }
+    boolean[][] image2 = {{true, false, false, true},
+                          {false, false, true, true},
+                          {false, true, true, false},
+                          {false, false, false, false}};
+    boolean[][] expected2 = {{false, false, false, false},
+                             {false, false, true,  false},
+                             {false, true,  true,  false},
+                             {false, false, false, false}};
+    boolean[][] connectedPixels2 = Fingerprint.connectedPixels(image2, 2, 1, 1);
+    printResultConnectedPixels(connectedPixels2, expected2);
 
-  /**
-   * This function is here to help you test the functionalities of
-   * connectedPixels. You are free to modify and/or delete it.
-   */
-  public static void testConnectedPixels3() {
+    //TEST 3
     System.out.print("testConnectedPixels3: ");
-    boolean[][] image = {{true,  false, false, true,  true},
+    boolean[][] image3 = {{true,  false, false, true,  true},
                          {true,  false, true,  true,  false},
                          {true,  true,  false, false, false},
                          {false, true,  false, true,  false}};
-    boolean[][] expected = {{true,  false, false, true,  false},
+    boolean[][] expected3 = {{true,  false, false, true,  false},
                             {true,  false, true,  true,  false},
                             {true,  true,  false, false, false},
                             {false, true,  false, false, false}};
-    boolean[][] connectedPixels = Fingerprint.connectedPixels(image, 2, 1, 2);
-    if (arrayEqual(connectedPixels, expected)) {
+    boolean[][] connectedPixels3 = Fingerprint.connectedPixels(image3, 2, 1, 2);
+    printResultConnectedPixels(connectedPixels3, expected3);
+
+    //TEST 4
+    System.out.print("testConnectedPixels4: ");
+    boolean[][] image4 = {{true,  true, false, false,  false},
+                          {false,  false, true,  false,  false},
+                          {true,  false,  true, true, false},
+                          {false, true,  false, true,  true}};
+    boolean[][] expected4 = {{false,  true, false, false,  false},
+                             {false,  false, true,  false,  false},
+                             {false,  false,  true, true, false},
+                             {false, true,  false, true,  true}};
+    boolean[][] connectedPixels4 = Fingerprint.connectedPixels(image4, 2, 3, 2);
+    printResultConnectedPixels(connectedPixels4, expected4);
+
+    System.out.println();
+  }
+
+  /**
+   * This functions allows to clarify the code of the test for connectedPixels above
+   * It compares the Array that's outputted by the written function and the expected output
+   * @param connectedPixels --> Array outputted by the written function
+   * @param expected --> expected output
+   */
+  public static void printResultConnectedPixels(boolean[][] connectedPixels, boolean[][] expected){
+    if (arrayEqual(connectedPixels, expected)){
       System.out.println("OK");
     } else {
       System.out.println("ERROR");
