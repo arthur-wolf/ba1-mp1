@@ -320,15 +320,41 @@ public class Fingerprint {
      *
      * @param connectedPixels the result of
      *                        {@link #connectedPixels(boolean[][], int, int, int)}.
-     * @param row             the row of the minutia.
-     * @param col             the col of the minutia.
+     * @param rowm             the row of the minutia.
+     * @param colm             the col of the minutia.
      * @param slope           the slope as returned by
      *                        {@link #computeSlope(boolean[][], int, int)}.
      * @return the orientation of the minutia in radians.
      */
-    public static double computeAngle(boolean[][] connectedPixels, int row, int col, double slope) {
-        //TODO implement
-        return 0;
+    public static double computeAngle(boolean[][] connectedPixels, int rowm, int colm, double slope) {
+        double angle = Math.atan(slope); // /!\ angle est ici en radians /!\
+        int x;
+        int y;
+        int abovePixels = 0;
+        int underneathPixels = 0;
+        for (int row = 0; row < connectedPixels.length; ++row) {
+            for (int col = 0; col < connectedPixels[0].length; ++col) {
+                if (isPixelBlack(connectedPixels[row][col])) {
+                    x = col - colm;
+                    y = rowm - row;
+                    if (y >= (-1/slope) * x){
+                        abovePixels++;
+                    } else {
+                        underneathPixels++;
+                    }
+                }
+            }
+        }
+        if (slope == Double.POSITIVE_INFINITY){
+            if (abovePixels > underneathPixels){
+                return Math.PI/2.0;
+            } else if (abovePixels < underneathPixels){
+                return -Math.PI/2.0;
+            }
+        } else if ((angle > 0 && (underneathPixels > abovePixels)) || angle < 0 && (underneathPixels < abovePixels)){
+            return angle + Math.PI;
+        }
+        return angle;
     }
 
     /**
@@ -358,7 +384,7 @@ public class Fingerprint {
      */
     public static List<int[]> extract(boolean[][] image) {
         List<int[]> minutiae = new ArrayList<int[]>();
-        for (int i = 1; i < image.length -1; ++i){
+        for (int i = 1; i < image.length - 1; ++i){
             for (int j = 1; j < image[1].length - 1; j++){
                 if (isMinutiae(image[i][j], getNeighbours(image, i ,j))){
                     int[] values = {i , j, computeOrientation(image, i,j, ORIENTATION_DISTANCE)};
@@ -367,7 +393,7 @@ public class Fingerprint {
             }
         }
         return minutiae;
-        //todo --> tests work except for the angle, it'll work when computeAngle and computeOrientation will be written
+        //todo --> tests work except for the angle, it'll work when computeOrientation will be written
     }
 
     /**

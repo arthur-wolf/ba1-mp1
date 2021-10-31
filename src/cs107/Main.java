@@ -26,11 +26,12 @@ public class Main {
     testIdentical();
     testConnectedPixels();
     testComputeSlope();
+    testComputeAngle();
     //testOrientation();
     //testApplyRotation();
     //testApplyTranslation();
-    testThin();
-    testWithSkeleton();
+    //testThin();
+    //testWithSkeleton();
     
     //testDrawSkeleton("1_1"); //draw skeleton of fingerprint 1_1.png
     //testDrawSkeleton("1_2"); //draw skeleton of fingerprint 1_2.png
@@ -358,6 +359,82 @@ public class Main {
   }
 
   /**
+   * This function tests the functionalities of Fingerprint.computeAngle() with 4 different datasets
+   */
+  public static void testComputeAngle(){
+    System.out.print("testComputeAngle1:");   //case decreasing linear curve --> angle is -pi/4 (-45°)
+    boolean[][] connectedPixels1 = {{false, false, false, false, false},
+                                   {false, true, false, false, false},
+                                   {false, false, true, false, false},
+                                   {false, false, false, true, false},
+                                   {false, false, false, false, false}};
+    int row1 = 1;
+    int col1 = 1;
+    double slope1 = Fingerprint.computeSlope(connectedPixels1, row1, col1);
+    double result1 = Fingerprint.computeAngle(connectedPixels1, row1, col1, slope1);
+    double expected1 = -Math.PI/4;
+    printResultComputeAngle(result1, expected1);
+
+    System.out.print("testComputeAngle2:");   //Case vertical going up --> slope is infinity and angle pi/2 (90°)
+    boolean[][] connectedPixels2 = {{false, false, false, false, false},
+                                    {false, false, true, false, false},
+                                    {false, false, true, false, false},
+                                    {false, false, true, false, false},
+                                    {false, false, false, false, false}};
+    int row2 = 3;
+    int col2 = 2;
+    double slope2 = Fingerprint.computeSlope(connectedPixels2, row2, col2);
+    double result2 = Fingerprint.computeAngle(connectedPixels2, row2, col2, slope2);
+    double expected2 = Math.PI/2;
+    printResultComputeAngle(result2, expected2);
+
+    System.out.print("testComputeAngle3:");   //Case vertical going down --> slope is -infinity and angle -pi/2 (-90°)
+    boolean[][] connectedPixels3 = {{false, false, false, false, false},
+                                    {false, false, true, false, false},
+                                    {false, false, true, false, false},
+                                    {false, false, true, false, false},
+                                    {false, false, false, false, false}};
+    int row3 = 1;
+    int col3 = 2;
+    double slope3 = Fingerprint.computeSlope(connectedPixels3, row3, col3);
+    double result3 = Fingerprint.computeAngle(connectedPixels3, row3, col3, slope3);
+    double expected3 = -Math.PI/2;
+    printResultComputeAngle(result3, expected3);
+
+    System.out.print("testComputeAngle4:");   //Case decreasing linear curve --> slope is -1 and angle 3*pi/4 (145°)
+    boolean[][] connectedPixels4 = {{false, false, false, false, false},
+                                    {false, true, false, false, false},
+                                    {false, false, true, false, false},
+                                    {false, false, false, true, false},
+                                    {false, false, false, false, false}};
+    int row4 = 3;
+    int col4 = 3;
+    double slope4 = Fingerprint.computeSlope(connectedPixels4, row4, col4);
+    double result4 = Fingerprint.computeAngle(connectedPixels4, row4, col4, slope4);
+    double expected4 = 3*Math.PI/4;
+    printResultComputeAngle(result4, expected4);
+
+    System.out.println();
+  }
+
+  /**
+   * This function allows to clarify the code above for testComputeAngle()
+   * @param result output from Fingerprint.computeAngle()
+   * @param expected expected output
+   */
+  public static void printResultComputeAngle(double result, double expected) {
+    if (result == expected) {
+      System.out.println("OK");
+    } else {
+      System.out.println("ERROR");
+      System.out.print("Expected: ");
+      System.out.println(expected);
+      System.out.print("Computed: ");
+      System.out.println(result);
+    }
+  }
+
+  /**
    * This function is here to help you test the functionalities of
    * computeOrientation. You are free to modify and/or delete it.
    */
@@ -555,6 +632,7 @@ public class Main {
    * it.
    */
   public static void testWithSkeleton() {
+    //boolean[][] skeleton1 = Helper.readBinary("resources/test_inputs/skeletonTest.png");
     boolean[][] skeleton1 = Helper.readBinary("resources/test_inputs/skeletonTest.png");
     assert skeleton1 != null;
     List<int[]> minutiae1 = Fingerprint.extract(skeleton1);
