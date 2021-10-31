@@ -27,11 +27,11 @@ public class Main {
     testConnectedPixels();
     testComputeSlope();
     testComputeAngle();
-    //testOrientation();
+    testOrientation();
     //testApplyRotation();
     //testApplyTranslation();
-    //testThin();
-    //testWithSkeleton();
+    testThin();
+    testWithSkeleton();
     
     //testDrawSkeleton("1_1"); //draw skeleton of fingerprint 1_1.png
     //testDrawSkeleton("1_2"); //draw skeleton of fingerprint 1_2.png
@@ -217,7 +217,6 @@ public class Main {
     This function tests the functionalities of testIdentical on 3 different datasets
   */
   public static void testIdentical(){
-    //TEST 1
     System.out.print("testIdentical1: ");
     boolean[][] image11 = {{false, true, false, true},
                           {true, false, true, false},
@@ -231,7 +230,6 @@ public class Main {
     boolean result1 = Fingerprint.identical(image11, image21);
     printResultsIdentical(result1, expected1);
 
-    //TEST 2
     System.out.print("testIdentical2: ");
     boolean[][] image12 = {{true, false, false, true},
                           {false, false, true, true},
@@ -246,7 +244,6 @@ public class Main {
     boolean result2 = Fingerprint.identical(image12, image22);
     printResultsIdentical(result2, expected2);
 
-    //TEST 3
     System.out.print("testIdentical2: ");
     boolean[][] image13 = {{true, false, false, true},
                           {false, false, true, true},
@@ -285,7 +282,6 @@ public class Main {
    * connectedPixels. You are free to modify and/or delete it.
    */
   public static void testConnectedPixels() {
-    //TEST 1
     System.out.print("testConnectedPixels1: ");
     boolean[][] image1 = {{true, false, false, true},
                           {false, false, true, true},
@@ -298,7 +294,6 @@ public class Main {
     boolean[][] connectedPixels1 = Fingerprint.connectedPixels(image1, 2, 1, 10);
     printResultConnectedPixels(connectedPixels1, expected1);
 
-    //TEST 2
     System.out.print("testConnectedPixels2: ");
     boolean[][] image2 = {{true, false, false, true},
                           {false, false, true, true},
@@ -311,7 +306,6 @@ public class Main {
     boolean[][] connectedPixels2 = Fingerprint.connectedPixels(image2, 2, 1, 1);
     printResultConnectedPixels(connectedPixels2, expected2);
 
-    //TEST 3
     System.out.print("testConnectedPixels3: ");
     boolean[][] image3 = {{true,  false, false, true,  true},
                          {true,  false, true,  true,  false},
@@ -324,7 +318,6 @@ public class Main {
     boolean[][] connectedPixels3 = Fingerprint.connectedPixels(image3, 2, 1, 2);
     printResultConnectedPixels(connectedPixels3, expected3);
 
-    //TEST 4
     System.out.print("testConnectedPixels4: ");
     boolean[][] image4 = {{true,  true, false, false,  false},
                           {false,  false, true,  false,  false},
@@ -401,7 +394,7 @@ public class Main {
     double expected3 = -Math.PI/2;
     printResultComputeAngle(result3, expected3);
 
-    System.out.print("testComputeAngle4:");   //Case decreasing linear curve --> slope is -1 and angle 3*pi/4 (145°)
+    System.out.print("testComputeAngle4:");   //Case decreasing linear curve --> slope is -1 and angle 3*pi/4 (135°)
     boolean[][] connectedPixels4 = {{false, false, false, false, false},
                                     {false, true, false, false, false},
                                     {false, false, true, false, false},
@@ -439,19 +432,77 @@ public class Main {
    * computeOrientation. You are free to modify and/or delete it.
    */
   public static void testOrientation() {
-    boolean[][] image = {{true, false, false, true},
+    System.out.print("testOrientation1: ");
+    boolean[][] image1 = {{true, false, false, true},
                          {false, false, true, true},
                          {false, true, true, false},
                          {false, false, false, false}};
-    int angle = Fingerprint.computeOrientation(image, 2, 1, 3);
-    System.out.println("Expected angle: 35\t Computed angle: " + angle);
+    int angle1 = Fingerprint.computeOrientation(image1, 2, 1, 3);
+    int expectedAngle1 = 35;
+    printResultOrientation(angle1, expectedAngle1);
+
+    System.out.print("testOrientation2: ");  //case decreasing linear curve --> angle is -pi/4 (-45°)
+    boolean[][] image2 = {{false, false, false, false, false},
+                                    {false, true, false, false, false},
+                                    {false, false, true, false, false},
+                                    {false, false, false, true, false},
+                                    {false, false, false, false, false}};
+    int angle2 = Fingerprint.computeOrientation(image2, 1, 1, 5);
+    int expectedAngle2 = (-45 + 360);
+    printResultOrientation(angle2, expectedAngle2);
+
+    System.out.print("testOrientation3: ");  //Case vertical going up --> slope is infinity and angle pi/2 (90°)
+    boolean[][] image3 = {{false, false, false, false, false},
+                          {false, false, true, false, false},
+                          {false, false, true, false, false},
+                          {false, false, true, false, false},
+                          {false, false, false, false, false}};
+    int angle3 = Fingerprint.computeOrientation(image3, 3, 2, 5);
+    int expectedAngle3 = 90;
+    printResultOrientation(angle3, expectedAngle3);
+
+    System.out.print("testOrientation4: ");  //Case vertical going down --> slope is -infinity and angle -pi/2 (-90°)
+    boolean[][] image4 = {{false, false, false, false, false},
+                          {false, false, true, false, false},
+                          {false, false, true, false, false},
+                          {false, false, true, false, false},
+                          {false, false, false, false, false}};
+    int angle4 = Fingerprint.computeOrientation(image4, 1, 2, 5);
+    int expectedAngle4 = (-90 + 360);
+    printResultOrientation(angle4, expectedAngle4);
+
+    System.out.print("testOrientation5: ");  //Case decreasing linear curve --> slope is -1 and angle 3*pi/4 (135°)
+    boolean[][] image5 = {{false, false, false, false, false},
+                          {false, true, false, false, false},
+                          {false, false, true, false, false},
+                          {false, false, false, true, false},
+                          {false, false, false, false, false}};
+    int angle5 = Fingerprint.computeOrientation(image5, 3, 3, 3);
+    int expectedAngle5 = 135;
+    printResultOrientation(angle5, expectedAngle5);
+  }
+
+  /**
+   * This function allows to clarify the code above for testOrientation()
+   * @param result output from Fingerprint.computeOrientation()
+   * @param expected expected output
+   */
+  public static void printResultOrientation(int result, int expected) {
+    if (result == expected) {
+      System.out.println("OK");
+    } else {
+      System.out.println("ERROR");
+      System.out.print("Expected: ");
+      System.out.println(expected);
+      System.out.print("Computed: ");
+      System.out.println(result);
+    }
   }
 
   /**
    * This function tests Fingerprint.computeSlope() with 5 different datasets
    */
   public static void testComputeSlope(){
-    //TEST 1
     System.out.print("testComputeSlope1: "); //Case increasing linear curve
     boolean[][] connectedPixels1 = {{false, false, false, false, false},
                                     {false, false, false, true, false},
@@ -464,7 +515,6 @@ public class Main {
     double expected1 = 1.0;
     printResultComputeSlope(coeff1, expected1);
 
-    //TEST 2
     System.out.print("testComputeSlope2: "); // Case a = constant
     boolean[][] connectedPixels2 = {{false, false, false, false, false},
                                     {true, true, true, true, false},
@@ -477,7 +527,6 @@ public class Main {
     double expected2 = 0;
     printResultComputeSlope(coeff2, expected2);
 
-    //TEST 3
     System.out.print("testComputeSlope3: "); // Case Infinity
     boolean[][] connectedPixels3 = {{false, false, false, false, false},
                                     {false, true, false, false, false},
@@ -490,7 +539,6 @@ public class Main {
     double expected3 = Double.POSITIVE_INFINITY;
     printResultComputeSlope(coeff3, expected3);
 
-    //TEST 4
     System.out.print("testComputeSlope4: "); // Case decreasing linear curve
     boolean[][] connectedPixels4 = {{false, false, false, false, false},
                                     {true, false, false, false, false},
@@ -503,7 +551,6 @@ public class Main {
     double expected4 = -2.0;
     printResultComputeSlope(coeff4, expected4);
 
-    //TEST 5
     System.out.print("testComputeSlope5: "); // Case bigger array
     boolean[][] connectedPixels5 = {{false, false, false, false, false, false, false, false, false},
                                     {false, false, false, false, false, false, false, false, true},
@@ -632,7 +679,6 @@ public class Main {
    * it.
    */
   public static void testWithSkeleton() {
-    //boolean[][] skeleton1 = Helper.readBinary("resources/test_inputs/skeletonTest.png");
     boolean[][] skeleton1 = Helper.readBinary("resources/test_inputs/skeletonTest.png");
     assert skeleton1 != null;
     List<int[]> minutiae1 = Fingerprint.extract(skeleton1);

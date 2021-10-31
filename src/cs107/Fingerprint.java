@@ -283,22 +283,22 @@ public class Fingerprint {
      *
      * @param connectedPixels the result of
      *                        {@link #connectedPixels(boolean[][], int, int, int)}.
-     * @param rowm            the row of the minutia.
-     * @param colm            the col of the minutia.
+     * @param row             the row of the minutia.
+     * @param col             the col of the minutia.
      * @return the slope.
      */
-    public static double computeSlope(boolean[][] connectedPixels, int rowm, int colm) {
+    public static double computeSlope(boolean[][] connectedPixels, int row, int col) {
         double sumX2 = 0.0;       //double pour éviter l'erreur "integer division in floating-point context"
         double sumY2 = 0.0;
         double sumXY = 0.0;
         int x;
         int y;
 
-        for (int row = 0; row < connectedPixels.length; ++row) {
-            for (int col = 0; col < connectedPixels[0].length; ++col) {
-                if (isPixelBlack(connectedPixels[row][col])) {
-                    x = col - colm;
-                    y = rowm - row;
+        for (int rowPixel = 0; rowPixel < connectedPixels.length; ++rowPixel) {
+            for (int colPixel = 0; colPixel < connectedPixels[0].length; ++colPixel) {
+                if (isPixelBlack(connectedPixels[rowPixel][colPixel])) {
+                    x = colPixel - col;
+                    y = row - rowPixel;
                     sumX2 += Math.pow(x, 2.0);
                     sumY2 += Math.pow(y, 2.0);
                     sumXY += x * y;
@@ -320,24 +320,24 @@ public class Fingerprint {
      *
      * @param connectedPixels the result of
      *                        {@link #connectedPixels(boolean[][], int, int, int)}.
-     * @param rowm             the row of the minutia.
-     * @param colm             the col of the minutia.
+     * @param row             the row of the minutia.
+     * @param col             the col of the minutia.
      * @param slope           the slope as returned by
      *                        {@link #computeSlope(boolean[][], int, int)}.
      * @return the orientation of the minutia in radians.
      */
-    public static double computeAngle(boolean[][] connectedPixels, int rowm, int colm, double slope) {
+    public static double computeAngle(boolean[][] connectedPixels, int row, int col, double slope) {
         double angle = Math.atan(slope); // /!\ angle est ici en radians /!\
         int x;
         int y;
         int abovePixels = 0;
         int underneathPixels = 0;
-        for (int row = 0; row < connectedPixels.length; ++row) {
-            for (int col = 0; col < connectedPixels[0].length; ++col) {
-                if (isPixelBlack(connectedPixels[row][col])) {
-                    x = col - colm;
-                    y = rowm - row;
-                    if (y >= (-1/slope) * x){
+        for (int rowPixel = 0; rowPixel < connectedPixels.length; ++rowPixel) {
+            for (int colPixel = 0; colPixel < connectedPixels[0].length; ++colPixel) {
+                if (isPixelBlack(connectedPixels[rowPixel][colPixel])) {
+                    x = colPixel - col;
+                    y = row - rowPixel;
+                    if (y >= (-1 / slope) * x) {
                         abovePixels++;
                     } else {
                         underneathPixels++;
@@ -345,13 +345,13 @@ public class Fingerprint {
                 }
             }
         }
-        if (slope == Double.POSITIVE_INFINITY){
-            if (abovePixels > underneathPixels){
-                return Math.PI/2.0;
-            } else if (abovePixels < underneathPixels){
-                return -Math.PI/2.0;
+        if (slope == Double.POSITIVE_INFINITY) {
+            if (abovePixels > underneathPixels) {
+                return Math.PI / 2.0;
+            } else if (abovePixels < underneathPixels) {
+                return -Math.PI / 2.0;
             }
-        } else if ((angle > 0 && (underneathPixels > abovePixels)) || angle < 0 && (underneathPixels < abovePixels)){
+        } else if ((angle > 0.0 && (underneathPixels > abovePixels)) || angle < 0.0 && (underneathPixels < abovePixels)) {
             return angle + Math.PI;
         }
         return angle;
@@ -369,8 +369,16 @@ public class Fingerprint {
      * @return The orientation in degrees.
      */
     public static int computeOrientation(boolean[][] image, int row, int col, int distance) {
-        //TODO implement
-        return 0;
+        boolean[][] connectedPixels = connectedPixels(image, row, col, distance);
+        double slope = computeSlope(connectedPixels, row, col);
+        double angle = computeAngle(connectedPixels, row, col, slope);
+        int convertedAngle = (int) Math.round(angle * (180 / Math.PI));
+
+        if (convertedAngle < 0) {
+            convertedAngle += 360;
+        }
+
+        return convertedAngle;
     }
 
     /**
@@ -384,16 +392,15 @@ public class Fingerprint {
      */
     public static List<int[]> extract(boolean[][] image) {
         List<int[]> minutiae = new ArrayList<int[]>();
-        for (int i = 1; i < image.length - 1; ++i){
-            for (int j = 1; j < image[1].length - 1; j++){
-                if (isMinutiae(image[i][j], getNeighbours(image, i ,j))){
-                    int[] values = {i , j, computeOrientation(image, i,j, ORIENTATION_DISTANCE)};
+        for (int i = 1; i < image.length - 1; ++i) {
+            for (int j = 1; j < image[1].length - 1; j++) {
+                if (isMinutiae(image[i][j], getNeighbours(image, i, j))) {
+                    int[] values = {i, j, computeOrientation(image, i, j, ORIENTATION_DISTANCE)};
                     minutiae.add(values);
                 }
             }
         }
         return minutiae;
-        //todo --> tests work except for the angle, it'll work when computeOrientation will be written
     }
 
     /**
@@ -514,6 +521,7 @@ public class Fingerprint {
 
     /**
      * Copies an already existing array into a new array
+     *
      * @param list existing array
      * @return the copied array
      */
@@ -529,11 +537,12 @@ public class Fingerprint {
 
     /**
      * Checks whether a pixel is a minutia
-     * @param pixel coordinates of the pixel in the image
+     *
+     * @param pixel      coordinates of the pixel in the image
      * @param neighbours 8 neighbours of the pixel
      * @return true if the pixel is a minutia
      */
-    public static boolean isMinutiae(boolean pixel, boolean[] neighbours){
+    public static boolean isMinutiae(boolean pixel, boolean[] neighbours) {
         return (isPixelBlack(pixel) && (transitions(neighbours) == 1 || transitions(neighbours) == 3));
     }
 }
