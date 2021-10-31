@@ -30,16 +30,16 @@ public class Main {
     testOrientation();
     //testApplyRotation();
     //testApplyTranslation();
-    testThin();
-    testWithSkeleton();
+    //testThin();
+    //testWithSkeleton();
     
-    //testDrawSkeleton("1_1"); //draw skeleton of fingerprint 1_1.png
-    //testDrawSkeleton("1_2"); //draw skeleton of fingerprint 1_2.png
-    //testDrawSkeleton("2_1"); //draw skeleton of fingerprint 2_1.png
+    testDrawSkeleton("1_1"); //draw skeleton of fingerprint 1_1.png
+    testDrawSkeleton("1_2"); //draw skeleton of fingerprint 1_2.png
+    testDrawSkeleton("2_1"); //draw skeleton of fingerprint 2_1.png
 
-    //testDrawMinutiae("1_1"); //draw minutiae of fingerprint 1_1.png
-    //testDrawMinutiae("1_2"); //draw minutiae of fingerprint 1_2.png
-    //testDrawMinutiae("2_1"); //draw minutiae of fingerprint 2_1.png
+    testDrawMinutiae("1_1"); //draw minutiae of fingerprint 1_1.png
+    testDrawMinutiae("1_2"); //draw minutiae of fingerprint 1_2.png
+    testDrawMinutiae("2_1"); //draw minutiae of fingerprint 2_1.png
 	
     //---------------------------
     // Test overall functionality
