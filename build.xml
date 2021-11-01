@@ -22,7 +22,6 @@
   </target>
  
  <target name="run" depends="compile">
-       <java classname="Main" fork="true"></java>
         <java classname="Main "
             classpath="${build.dir}">
             <arg value="80"/>
