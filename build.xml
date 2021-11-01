@@ -21,6 +21,10 @@
     </javac>	
   </target>
  
+ <target name="run" depends="compile">
+       <java classname="Main" fork="true"></java>
+ </target>
+ 
   <!-- Defualt target to run all targets-->
   <target name="mainTarget" depends="compile">
     <description>Main target</description>
