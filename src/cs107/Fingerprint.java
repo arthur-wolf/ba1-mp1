@@ -413,8 +413,24 @@ public class Fingerprint {
      * @return the minutia rotated around the given center.
      */
     public static int[] applyRotation(int[] minutia, int centerRow, int centerCol, int rotation) {
-        //TODO implement
-        return null;
+        assert (minutia != null);
+
+        int row = minutia[0];
+        int col = minutia[1];
+        int orientation = minutia[2];
+
+        int x = col - centerCol;
+        int y = centerRow - row;
+
+        double radianRotation = rotation * (Math.PI / 180);
+
+        double newX = (x * Math.cos(radianRotation)) - (y * Math.sin(radianRotation));
+        double newY = (x * Math.sin(radianRotation)) + (y * Math.cos(radianRotation));
+        int newRow = (int) Math.round(centerRow - newY);
+        int newCol = (int) Math.round(newX + centerCol);
+        int newOrientation = Math.round((orientation + rotation) % 360);
+
+        return new int[]{newRow, newCol, newOrientation};
     }
 
     /**
@@ -426,8 +442,17 @@ public class Fingerprint {
      * @return the translated minutia.
      */
     public static int[] applyTranslation(int[] minutia, int rowTranslation, int colTranslation) {
-        //TODO implement
-        return null;
+        assert (minutia != null);
+
+        int row = minutia[0];
+        int col = minutia[1];
+        int orientation = minutia[2];
+
+        int newRow = row - rowTranslation;
+        int newCol = col - colTranslation;
+        int newOrientation = orientation;
+
+        return new int[]{newRow, newCol, newOrientation};
     }
 
     /**
@@ -444,8 +469,12 @@ public class Fingerprint {
      */
     public static int[] applyTransformation(int[] minutia, int centerRow, int centerCol, int rowTranslation,
                                             int colTranslation, int rotation) {
-        //TODO implement
-        return null;
+        assert (minutia != null);
+
+        int[] minutiaWithRotation = applyRotation(minutia, centerRow, centerCol, rotation);
+        int[] minutiaWithRotationAndTranslation = applyTranslation(minutiaWithRotation, rowTranslation, colTranslation);
+
+        return minutiaWithRotationAndTranslation;
     }
 
     /**
@@ -462,8 +491,13 @@ public class Fingerprint {
      */
     public static List<int[]> applyTransformation(List<int[]> minutiae, int centerRow, int centerCol, int rowTranslation,
                                                   int colTranslation, int rotation) {
-        //TODO implement
-        return null;
+        assert (minutiae != null);
+
+        List<int[]> transformedMinutiae = new ArrayList<int[]>();
+        for (int[] minutia : minutiae) {
+            minutiae.add(applyTransformation(minutia, centerRow, centerCol, rowTranslation, colTranslation, rotation));
+        }
+        return transformedMinutiae;
     }
 
     /**
@@ -479,8 +513,29 @@ public class Fingerprint {
      */
     public static int matchingMinutiaeCount(List<int[]> minutiae1, List<int[]> minutiae2, int maxDistance,
                                             int maxOrientation) {
-        //TODO implement
-        return 0;
+        assert (minutiae1 != null);
+        assert (minutiae2 != null);
+
+        int overlappingMinutatie = 0;
+        for (int[] minutia1 : minutiae1) {
+            for (int[] minutia2 : minutiae2) {
+                int row1 = minutia1[0];
+                int col1 = minutia1[1];
+                int orientation1 = minutia1[2];
+
+                int row2 = minutia2[0];
+                int col2 = minutia2[1];
+                int orientation2 = minutia2[2];
+
+                double distance = Math.sqrt(Math.pow((row1 - row2), 2.0) + Math.pow((col1 - col2), 2.0));
+                double diffOrientation = Math.abs(orientation1 - orientation2);
+
+                if (distance <= maxOrientation && diffOrientation <= maxOrientation) {
+                    ++overlappingMinutatie;
+                }
+            }
+        }
+        return overlappingMinutatie;
     }
 
     /**
