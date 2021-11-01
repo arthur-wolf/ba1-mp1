@@ -23,3 +23,5 @@ jobs:
         distribution: 'adopt'
     - name: Build with Ant
       run: ant -noinput -buildfile build.xml
+    - name: Run with Ant
+      run: ant run
