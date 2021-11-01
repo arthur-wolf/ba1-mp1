@@ -23,6 +23,11 @@
  
  <target name="run" depends="compile">
        <java classname="Main" fork="true"></java>
+        <java classname="Main "
+            classpath="${build.dir}">
+            <arg value="80"/>
+            <arg value="C:"/>
+       </java>
  </target>
  
   <!-- Defualt target to run all targets-->
