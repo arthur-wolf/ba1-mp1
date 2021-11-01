@@ -547,7 +547,29 @@ public class Fingerprint {
      * otherwise.
      */
     public static boolean match(List<int[]> minutiae1, List<int[]> minutiae2) {
-        //TODO implement
+        for (int[] minutia1 : minutiae1) {
+            List<int[]> transformedMinutiae2 = new ArrayList<int[]>();
+            for (int[] minutia2 : minutiae2) {
+
+                int centerRow = minutia1[0];
+                int centerCol = minutia1[1];
+                int rowTranslation = minutia2[0] - minutia1[0];
+                int colTranslation = minutia2[1] - minutia1[1];
+                int rotation = minutia2[2] - minutia1[2];
+
+
+                for(int i = (int) Math.ceil(rotation - MATCH_ANGLE_OFFSET); i < Math.floor(rotation + MATCH_ANGLE_OFFSET); ++i){
+                    int[] minutia2WithTransformation = applyTransformation(minutia2, centerRow, centerCol, rowTranslation, colTranslation, i);
+                    transformedMinutiae2.add(minutia2WithTransformation);
+                }
+            }
+            int foundMatching = matchingMinutiaeCount(minutiae1, transformedMinutiae2, DISTANCE_THRESHOLD, ORIENTATION_THRESHOLD);
+            if(foundMatching >= FOUND_THRESHOLD){
+                System.out.println("FOUND "  + foundMatching);
+                System.out.println("THRESHOLD IS " + FOUND_THRESHOLD);
+                return true;
+            }
+        }
         return false;
     }
 
