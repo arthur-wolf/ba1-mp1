@@ -23,7 +23,7 @@
  
  <target name="run" depends="compile">
         <java classname="cs107.Main"
-            classpath="${build.dir}/cs107">
+            classpath="${build.dir}">
             <arg value="80"/>
             <arg value="C:"/>
        </java>
