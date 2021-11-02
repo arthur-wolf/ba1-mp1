@@ -31,16 +31,16 @@ public class Main {
         testApplyRotation();
         testApplyTranslation();
         testApplyTransformation();
-        //testThin();
-        //testWithSkeleton();
+        testThin();
+        testWithSkeleton();
 
-        //testDrawSkeleton("1_1"); //draw skeleton of fingerprint 1_1.png
-        //testDrawSkeleton("1_2"); //draw skeleton of fingerprint 1_2.png
-        //testDrawSkeleton("2_1"); //draw skeleton of fingerprint 2_1.png
+        testDrawSkeleton("1_1"); //draw skeleton of fingerprint 1_1.png
+        testDrawSkeleton("1_2"); //draw skeleton of fingerprint 1_2.png
+        testDrawSkeleton("2_1"); //draw skeleton of fingerprint 2_1.png
 
-        //testDrawMinutiae("1_1"); //draw minutiae of fingerprint 1_1.png
-        //testDrawMinutiae("1_2"); //draw minutiae of fingerprint 1_2.png
-        //testDrawMinutiae("2_1"); //draw minutiae of fingerprint 2_1.png
+        testDrawMinutiae("1_1"); //draw minutiae of fingerprint 1_1.png
+        testDrawMinutiae("1_2"); //draw minutiae of fingerprint 1_2.png
+        testDrawMinutiae("2_1"); //draw minutiae of fingerprint 2_1.png
 
         //---------------------------
         // Test overall functionality
@@ -58,9 +58,9 @@ public class Main {
         testCompareAllFingerprints("1_1", 2, false);
 
         //compare 1_1 with all images of finger 3 to 16
-        //for (int f = 3; f <= 16; f++) {
-        //    testCompareAllFingerprints("1_1", f, false);
-        //}
+        for (int f = 3; f <= 16; f++) {
+            testCompareAllFingerprints("1_1", f, false);
+        }
     }
 
     /**
@@ -833,21 +833,21 @@ public class Main {
         assert image1 != null;
         //Helper.show(Helper.fromBinary(image1), "Image1");
         boolean[][] skeleton1 = Fingerprint.thin(image1);
-        Helper.writeBinary("skeleton_" + name1 + ".png", skeleton1);
+        //Helper.writeBinary("skeleton_" + name1 + ".png", skeleton1);
         List<int[]> minutiae1 = Fingerprint.extract(skeleton1);
-        printMinutiae(minutiae1);
+        //printMinutiae(minutiae1);
 
-        int[][] colorImageSkeleton1 = Helper.fromBinary(skeleton1);
-        Helper.drawMinutia(colorImageSkeleton1, minutiae1);
-        Helper.writeARGB("./minutiae_" + name1 + ".png", colorImageSkeleton1);
+        //int[][] colorImageSkeleton1 = Helper.fromBinary(skeleton1);
+        //Helper.drawMinutia(colorImageSkeleton1, minutiae1);
+        //Helper.writeARGB("./minutiae_" + name1 + ".png", colorImageSkeleton1);
 
         boolean[][] image2 = Helper.readBinary("resources/fingerprints/" + name2 + ".png");
         boolean[][] skeleton2 = Fingerprint.thin(image2);
         List<int[]> minutiae2 = Fingerprint.extract(skeleton2);
 
-        int[][] colorImageSkeleton2 = Helper.fromBinary(skeleton2);
-        Helper.drawMinutia(colorImageSkeleton2, minutiae2);
-        Helper.writeARGB("./minutiae_" + name2 + ".png", colorImageSkeleton2);
+        //int[][] colorImageSkeleton2 = Helper.fromBinary(skeleton2);
+        //Helper.drawMinutia(colorImageSkeleton2, minutiae2);
+        //Helper.writeARGB("./minutiae_" + name2 + ".png", colorImageSkeleton2);
 
         boolean isMatch = Fingerprint.match(minutiae1, minutiae2);
         System.out.print("Compare " + name1 + " with " + name2);

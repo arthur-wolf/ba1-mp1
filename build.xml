@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Set the project name, basedir and default target to be executed-->
+<project name="ba1-mp1" default="mainTarget" basedir=".">
+    <!-- Sets the properties here-->
+    <property name="src.dir" location="src/cs107" />
+    <property name="build.dir" location="bin" />
+
+    <!-- Target for deleting the existing directories-->
+    <target name="clean">
+        <delete dir="${build.dir}" />
+    </target>
+
+    <!-- Target for creating the new directories-->
+    <target name="makedir">
+        <mkdir dir="${build.dir}" />
+    </target>
+
+    <!-- Target for compiling the java code-->
+    <target name="compile" depends="clean, makedir">
+        <javac srcdir="${src.dir}" destdir="${build.dir}">
+        </javac>
+    </target>
+
+    <target name="run" depends="compile">
+        <java classname="cs107.Main"
+              classpath="${build.dir}">
+            <arg value="80"/>
+            <arg value="C:"/>
+        </java>
+    </target>
+
+    <!-- Defualt target to run all targets-->
+    <target name="mainTarget" depends="compile">
+        <description>Main target</description>
+    </target>
+
+</project>
