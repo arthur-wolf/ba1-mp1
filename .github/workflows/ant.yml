@@ -30,4 +30,4 @@ jobs:
       if: success()
       with:
         name: ba1-mp1
-        path: target/ba1-mp1.jar
+        path: bin
