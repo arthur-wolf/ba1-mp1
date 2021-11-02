@@ -25,3 +25,9 @@ jobs:
       run: ant -noinput -buildfile build.xml
     - name: Run with Ant
       run: ant run
+    - name: Archive artifacts
+      uses: actions/upload-artifact@v1
+      if: success()
+      with:
+        name: ba1-mp1
+        path: target/ba1-mp1.jar
