@@ -516,7 +516,7 @@ public class Fingerprint {
         assert (minutiae1 != null);
         assert (minutiae2 != null);
 
-        int overlappingMinutatie = 0;
+        int overlappingMinutiae = 0;
         for (int[] minutia1 : minutiae1) {
             for (int[] minutia2 : minutiae2) {
                 int row1 = minutia1[0];
@@ -530,12 +530,12 @@ public class Fingerprint {
                 double distance = Math.sqrt(Math.pow((row1 - row2), 2.0) + Math.pow((col1 - col2), 2.0));
                 double diffOrientation = Math.abs(orientation1 - orientation2);
 
-                if (distance <= maxOrientation && diffOrientation <= maxOrientation) {
-                    ++overlappingMinutatie;
+                if (distance <= maxDistance && diffOrientation <= maxOrientation) {
+                    ++overlappingMinutiae;
                 }
             }
         }
-        return overlappingMinutatie;
+        return overlappingMinutiae;
     }
 
     /**
