@@ -22,8 +22,8 @@
   </target>
  
  <target name="run" depends="compile">
-        <java classname="cs107/Main"
-            classpath="${build.dir}">
+        <java classname="Main"
+            classpath="${build.dir}/cs107">
             <arg value="80"/>
             <arg value="C:"/>
        </java>
