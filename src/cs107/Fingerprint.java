@@ -265,9 +265,8 @@ public class Fingerprint {
                     if (isPixelBlack(image[rowImage][columnImage]) && (rowImage != row || columnImage != col)
                             && !isPixelBlack(imageConnectedPixels[rowImage][columnImage])
                             && blackNeighbours(getNeighbours(imageConnectedPixels, rowImage, columnImage)) >= 1
-                            && Math.abs(rowImage - row) <= (distance + 1 / 2)
-                            && Math.abs(columnImage - col) <= (distance + 1 / 2)) {
-                        //TODO: check distance ou distance +1/2
+                            && Math.abs(rowImage - row) <= (distance)
+                            && Math.abs(columnImage - col) <= (distance)) {
 
                         imageConnectedPixels[rowImage][columnImage] = true;
                         foundNewConnectedPixels = true;
@@ -495,7 +494,7 @@ public class Fingerprint {
 
         List<int[]> transformedMinutiae = new ArrayList<int[]>();
         for (int[] minutia : minutiae) {
-            minutiae.add(applyTransformation(minutia, centerRow, centerCol, rowTranslation, colTranslation, rotation));
+            transformedMinutiae.add(applyTransformation(minutia, centerRow, centerCol, rowTranslation, colTranslation, rotation));
         }
         return transformedMinutiae;
     }
@@ -548,7 +547,6 @@ public class Fingerprint {
      */
     public static boolean match(List<int[]> minutiae1, List<int[]> minutiae2) {
         for (int[] minutia1 : minutiae1) {
-            List<int[]> transformedMinutiae2 = new ArrayList<int[]>();
             for (int[] minutia2 : minutiae2) {
 
                 int centerRow = minutia1[0];
@@ -557,17 +555,13 @@ public class Fingerprint {
                 int colTranslation = minutia2[1] - minutia1[1];
                 int rotation = minutia2[2] - minutia1[2];
 
-
                 for(int i = (int) Math.ceil(rotation - MATCH_ANGLE_OFFSET); i < Math.floor(rotation + MATCH_ANGLE_OFFSET); ++i){
-                    int[] minutia2WithTransformation = applyTransformation(minutia2, centerRow, centerCol, rowTranslation, colTranslation, i);
-                    transformedMinutiae2.add(minutia2WithTransformation);
+                    List<int[]> minutia2WithTransformation = applyTransformation(minutiae2, centerRow, centerCol, rowTranslation, colTranslation, (i));
+                    int foundMatching = matchingMinutiaeCount(minutiae1, minutia2WithTransformation, DISTANCE_THRESHOLD, ORIENTATION_THRESHOLD);
+                    if(foundMatching >= FOUND_THRESHOLD){
+                        return true;
+                    }
                 }
-            }
-            int foundMatching = matchingMinutiaeCount(minutiae1, transformedMinutiae2, DISTANCE_THRESHOLD, ORIENTATION_THRESHOLD);
-            if(foundMatching >= FOUND_THRESHOLD){
-                System.out.println("FOUND "  + foundMatching);
-                System.out.println("THRESHOLD IS " + FOUND_THRESHOLD);
-                return true;
             }
         }
         return false;

@@ -1,5 +1,8 @@
 package cs107;
 
+import javax.imageio.ImageIO;
+import java.awt.image.BufferedImage;
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -14,6 +17,8 @@ public class Main {
      * @param args the command lines arguments of the program.
      */
     public static void main(String[] args) {
+        Helper.preProcessImages("resources/test_inputs/1_1_small.png");
+
         //---------------------------
         // Tests functions separately
         //---------------------------
@@ -31,16 +36,17 @@ public class Main {
         testApplyRotation();
         testApplyTranslation();
         testApplyTransformation();
-        testThin();
-        testWithSkeleton();
+        //testThin();
+        //testWithSkeleton();
+        //testWithSkeleton();
 
-        testDrawSkeleton("1_1"); //draw skeleton of fingerprint 1_1.png
-        testDrawSkeleton("1_2"); //draw skeleton of fingerprint 1_2.png
-        testDrawSkeleton("2_1"); //draw skeleton of fingerprint 2_1.png
+        //testDrawSkeleton("1_1"); //draw skeleton of fingerprint 1_1.png
+        //testDrawSkeleton("1_2"); //draw skeleton of fingerprint 1_2.png
+        //testDrawSkeleton("2_1"); //draw skeleton of fingerprint 2_1.png
 
-        testDrawMinutiae("1_1"); //draw minutiae of fingerprint 1_1.png
-        testDrawMinutiae("1_2"); //draw minutiae of fingerprint 1_2.png
-        testDrawMinutiae("2_1"); //draw minutiae of fingerprint 2_1.png
+        //testDrawMinutiae("1_1"); //draw minutiae of fingerprint 1_1.png
+        //testDrawMinutiae("1_2"); //draw minutiae of fingerprint 1_2.png
+        //testDrawMinutiae("2_1"); //draw minutiae of fingerprint 2_1.png
 
         //---------------------------
         // Test overall functionality
@@ -52,16 +58,17 @@ public class Main {
         testCompareFingerprints("1_1", "2_1", false); //expected match: false
 
         //compare 1_1 with all other images of the same finger
-        //testCompareAllFingerprints("1_1", 1, true);
+        testCompareAllFingerprints("1_1", 1, true);
 
         //compare 1_1 with all images of finger 2
-        //testCompareAllFingerprints("1_1", 2, false);
+        testCompareAllFingerprints("1_1", 2, false);
 
         //compare 1_1 with all images of finger 3 to 16
-        //for (int f = 3; f <= 16; f++) {
-            //testCompareAllFingerprints("1_1", f, false);
-        //}
+        for (int f = 3; f <= 16; f++) {
+            testCompareAllFingerprints("1_1", f, false);
+        }
     }
+
 
     /**
      * This function is here to help you test the functionalities of
@@ -835,7 +842,6 @@ public class Main {
         boolean[][] skeleton1 = Fingerprint.thin(image1);
         //Helper.writeBinary("skeleton_" + name1 + ".png", skeleton1);
         List<int[]> minutiae1 = Fingerprint.extract(skeleton1);
-        //printMinutiae(minutiae1);
 
         //int[][] colorImageSkeleton1 = Helper.fromBinary(skeleton1);
         //Helper.drawMinutia(colorImageSkeleton1, minutiae1);
