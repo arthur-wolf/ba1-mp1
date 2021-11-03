@@ -25,20 +25,12 @@ public class Main {
         System.out.println("Uncomment the function calls in Main.main to test your implementation.");
         System.out.println("The provided tests are not complete. You have to write your own tests.");
         System.out.println();
-        testGetNeighbours();
-        testBlackNeighbours();
-        testTransition();
-        testIdentical();
-        testConnectedPixels();
-        testComputeSlope();
-        testComputeAngle();
-        testOrientation();
-        testApplyRotation();
-        testApplyTranslation();
-        testApplyTransformation();
+        runAllTests();
         //testThin();
         //testWithSkeleton();
         //testWithSkeleton();
+
+        testAll();
 
         //testDrawSkeleton("1_1"); //draw skeleton of fingerprint 1_1.png
         //testDrawSkeleton("1_2"); //draw skeleton of fingerprint 1_2.png
@@ -52,23 +44,39 @@ public class Main {
         // Test overall functionality
         //---------------------------
         //compare 1_1.png with 1_2.png: they are supposed to match
-        testCompareFingerprints("1_1", "1_2", true);  //expected match: true
+        //testCompareFingerprints("1_1", "1_2", true);  //expected match: true
 
         //compare 1_1.png with 2_1.png: they are not supposed to match
-        testCompareFingerprints("1_1", "2_1", false); //expected match: false
+        //testCompareFingerprints("1_1", "2_1", false); //expected match: false
 
         //compare 1_1 with all other images of the same finger
-        testCompareAllFingerprints("1_1", 1, true);
+        //testCompareAllFingerprints("1_1", 1, true);
 
         //compare 1_1 with all images of finger 2
-        testCompareAllFingerprints("1_1", 2, false);
+        //testCompareAllFingerprints("1_1", 2, false);
 
         //compare 1_1 with all images of finger 3 to 16
-        for (int f = 3; f <= 16; f++) {
-            testCompareAllFingerprints("1_1", f, false);
-        }
+        //for (int f = 3; f <= 16; f++) {
+        //    testCompareAllFingerprints("1_1", f, false);
+        //}
     }
 
+    /**
+     * This function runs all the tests that can be found below
+     */
+    public static void runAllTests(){
+        testGetNeighbours();
+        testBlackNeighbours();
+        testTransition();
+        testIdentical();
+        testConnectedPixels();
+        testComputeSlope();
+        testComputeAngle();
+        testOrientation();
+        testApplyRotation();
+        testApplyTranslation();
+        testApplyTransformation();
+    }
 
     /**
      * This function is here to help you test the functionalities of
@@ -614,31 +622,26 @@ public class Main {
 
         System.out.print("testApplyRotation1: ");
         int[] result = Fingerprint.applyRotation(minutia, 0, 0, 0);
-        assert result != null;
         int[] expected = new int[]{1, 3, 10};
         printResultApplyRotation(result, expected);
 
         System.out.print("testApplyRotation2: ");
         int[] result2 = Fingerprint.applyRotation(minutia, 10, 5, 0);
-        assert result2 != null;
         int[] expected2 = new int[]{1, 3, 10};
         printResultApplyRotation(result2, expected2);
 
         System.out.print("testApplyRotation3: ");
         int[] result3 = Fingerprint.applyRotation(minutia, 0, 0, 90);
-        assert result3 != null;
         int[] expected3 = new int[]{-3, 1, 100};
         printResultApplyRotation(result3, expected3);
 
         System.out.print("testApplyRotation4: ");
         int[] result4 = Fingerprint.applyRotation(new int[]{0, 3, 10}, 0, 0, 90);
-        assert result4 != null;
         int[] expected4 = new int[]{-3, 0, 100};
         printResultApplyRotation(result4, expected4);
 
         System.out.print("testApplyRotation5: ");
         int[] result5 = Fingerprint.applyRotation(new int[]{3, 0, 10}, 0, 0, 90);
-        assert result5 != null;
         int[] expected5 = new int[]{0, 3, 100};
         printResultApplyRotation(result5, expected5);
 
@@ -669,22 +672,19 @@ public class Main {
      * applyTranslation. You are free to modify and/or delete it.
      */
     public static void testApplyTranslation() {
-        // minutia, rowTranslation, colTranslation)
+        // minutia, rowTranslation, colTranslation
         System.out.print("testApplyTranslation1: ");
         int[] result1 = Fingerprint.applyTranslation(new int[]{1, 3, 10}, 0, 0);
-        assert result1 != null;
         int[] expected1 = new int[]{1, 3, 10};
         printResultApplyTranslation(result1, expected1);
 
         System.out.print("testApplyTranslation2: ");
         int[] result2 = Fingerprint.applyTranslation(new int[]{1, 3, 10}, 10, 5);
-        assert result2 != null;
         int[] expected2 = new int[]{-9, -2, 10};
         printResultApplyTranslation(result2, expected2);
 
         System.out.print("testApplyTranslation3: ");
         int[] result3 = Fingerprint.applyTranslation(new int[]{1, 3, 10}, -1, 1);
-        assert result3 != null;
         int[] expected3 = new int[]{2, 2, 10};
         printResultApplyTranslation(result3, expected3);
 
@@ -720,25 +720,21 @@ public class Main {
 
         System.out.print("testApplyTransformation: ");
         int[] result = Fingerprint.applyTransformation(minutia, 0, 0, 10, 5, 0);
-        assert result != null;
         int[] expected = new int[]{-9, -2, 10};
         printResultApplyTransformation(result, expected);
 
         System.out.print("testApplyTransformation2: ");
         int[] result2 = Fingerprint.applyTransformation(minutia, 0, 0, 10, 5, 90);
-        assert result2 != null;
         int[] expected2 = new int[]{-13, -4, 100};
         printResultApplyTransformation(result2, expected2);
 
         System.out.print("testApplyTransformation3: ");
         int[] result3 = Fingerprint.applyTransformation(new int[]{0, 3, 10}, 0, 0, 12, 0, 90);
-        assert result3 != null;
         int[] expected3 = new int[]{-15, 0, 100};
         printResultApplyTransformation(result3, expected3);
 
         System.out.print("testApplyTransformation4: ");
         int[] result4 = Fingerprint.applyTransformation(new int[]{3, 0, 10}, 0, 0, 0, 5, 90);
-        assert result4 != null;
         int[] expected4 = new int[]{0, -2, 100};
         printResultApplyTransformation(result4, expected4);
 
@@ -870,6 +866,20 @@ public class Main {
     public static void testCompareAllFingerprints(String name1, int finger, boolean expectedResult) {
         for (int i = 1; i <= 8; i++) {
             testCompareFingerprints(name1, finger + "_" + i, expectedResult);
+        }
+    }
+
+    public static void testAll(){
+        for (int k = 1; k <= 16; ++k){
+            for(int i = 1; i <= 16; ++i){
+                for (int j = 1; j <= 8; ++j){
+                    if (k == i){
+                        testCompareFingerprints(k + "_1",  i + "_" + j, true);
+                    }else{
+                        testCompareFingerprints(k + "_1",  i + "_" + j, false);
+                    }
+                }
+            }
         }
     }
 
