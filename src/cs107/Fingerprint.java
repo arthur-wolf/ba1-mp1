@@ -449,9 +449,8 @@ public class Fingerprint {
 
         int newRow = row - rowTranslation;
         int newCol = col - colTranslation;
-        int newOrientation = orientation;
 
-        return new int[]{newRow, newCol, newOrientation};
+        return new int[]{newRow, newCol, orientation};
     }
 
     /**
@@ -471,9 +470,8 @@ public class Fingerprint {
         assert (minutia != null);
 
         int[] minutiaWithRotation = applyRotation(minutia, centerRow, centerCol, rotation);
-        int[] minutiaWithRotationAndTranslation = applyTranslation(minutiaWithRotation, rowTranslation, colTranslation);
 
-        return minutiaWithRotationAndTranslation;
+        return applyTranslation(minutiaWithRotation, rowTranslation, colTranslation);
     }
 
     /**
