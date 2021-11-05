@@ -890,7 +890,11 @@ public class Main {
         //Helper.writeARGB("./minutiae_" + name2 + ".png", colorImageSkeleton2);
 
         boolean isMatch = Fingerprint.match(minutiae1, minutiae2);
-        System.out.print("Compare " + name1 + " with " + name2);
+        if(isMatch){
+            System.out.print("OK   : Compare " + name1 + " with " + name2);
+        }else{
+            System.out.print("ERROR   : Compare " + name1 + " with " + name2);
+        }
         System.out.print(". Expected match: " + expectedResult);
         System.out.println(" Computed match: " + isMatch);
     }
