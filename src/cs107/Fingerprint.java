@@ -75,7 +75,6 @@ public class Fingerprint {
         On met dans une liste ordonnée de type String toutes les positions à vérifier sous le format "ligne:colonne".
        */
         String[] coordsToCheck = new String[8];
-
         coordsToCheck[0] = (row - 1) + ":" + col;         //P0
         coordsToCheck[1] = (row - 1) + ":" + (col + 1);   //P1
         coordsToCheck[2] = row + ":" + (col + 1);         //P2
@@ -548,6 +547,7 @@ public class Fingerprint {
         for (int[] minutia1 : minutiae1) {
             for (int[] minutia2 : minutiae2) {
 
+                //On utilise le centre de m2 comme centre de rotation.
                 int centerRow = minutia2[0];
                 int centerCol = minutia2[1];
                 int rowTranslation = minutia2[0] - minutia1[0];

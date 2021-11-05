@@ -1,5 +1,9 @@
 package cs107;
 
+import javax.imageio.ImageIO;
+import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -47,18 +51,18 @@ public class Main {
         //testCompareAllFingerprints("1_1", 2, false);
 
         //compare 1_1 with all images of finger 3 to 16
-        //for (int f = 3; f <= 16; f++) {
+        //  for (int f = 3; f <= 16; f++) {
         //    testCompareAllFingerprints("1_1", f, false);
         //}
 
         for (int f = 1; f <= 16; f++) {
-            testCompareAllFingerprints("1_1", f, false);
+            testCompareAllFingerprints("1_1", f, f == 1);
         }
         for (int f = 1; f <= 16; f++) {
-            testCompareAllFingerprints("1_2", f, false);
+            testCompareAllFingerprints("1_2", f, f == 1);
         }
         for (int f = 1; f <= 16; f++) {
-            testCompareAllFingerprints("1_5", f, false);
+            testCompareAllFingerprints("1_5", f, f == 1);
         }
     }
 
@@ -77,6 +81,42 @@ public class Main {
         testApplyRotation();
         testApplyTranslation();
         testApplyTransformation();
+    }
+
+    /**
+     * This function process all the images from original_fingerprints
+     */
+    public static void preProcessImages(String name) {
+        try {
+            // final BufferedImage image = ImageIO.read(Helper.class.getResource(name));
+            int i = 0;
+            final BufferedImage image = ImageIO.read(new File(name));
+            final int width = image.getWidth();
+            final int height = image.getHeight();
+            final int[][] array = new int[height][width];
+            for (int row = 0; row < height; ++row) {
+                for (int col = 0; col < width; ++col) {
+                    //System.out.println("Row: " + row + " Col: " + col + " is " + image.getRGB(col, row));
+                    //System.out.println(image.getRGB(col, row) & 0xffffff);
+
+                    if(i == 0){
+                        i++;
+                        image.setRGB(col, row, (0xFF_FF_00_00));
+                    }else{
+                        i = 0;
+                        image.setRGB(col, row, (148290273 & 0xffffff));
+                    }
+                }
+            }
+
+            try {
+                ImageIO.write(image, "png", new File("test.png"));
+            } catch (final IOException e) {
+
+            }
+        } catch (final IOException e) {
+            System.out.println(e + " Filename: " + name);
+        }
     }
 
     /**

@@ -43,39 +43,6 @@ public final class Helper {
    */
   private final static double LUMA_COEFFICIENT_BLUE = 0.114;
 
-  public static void preProcessImages(String name) {
-    try {
-      // final BufferedImage image = ImageIO.read(Helper.class.getResource(name));
-      int i = 0;
-      final BufferedImage image = ImageIO.read(new File(name));
-      final int width = image.getWidth();
-      final int height = image.getHeight();
-      final int[][] array = new int[height][width];
-      for (int row = 0; row < height; ++row) {
-        for (int col = 0; col < width; ++col) {
-          //System.out.println("Row: " + row + " Col: " + col + " is " + image.getRGB(col, row));
-          //System.out.println(image.getRGB(col, row) & 0xffffff);
-
-          if(i == 0){
-            i++;
-            image.setRGB(col, row, (0 & 0xffffff));
-          }else{
-            i = 0;
-            image.setRGB(col, row, (148290273 & 0xffffff));
-          }
-        }
-      }
-
-      try {
-        ImageIO.write(image, "png", new File("test.png"));
-      } catch (final IOException e) {
-
-      }
-    } catch (final IOException e) {
-      System.out.println(e + " Filename: " + name);
-    }
-  }
-
   /**
    * Reads specified image from the resource folder as ARGB.
    *
