@@ -1,8 +1,5 @@
 package cs107;
 
-import javax.imageio.ImageIO;
-import java.awt.image.BufferedImage;
-import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -17,20 +14,14 @@ public class Main {
      * @param args the command lines arguments of the program.
      */
     public static void main(String[] args) {
-        Helper.preProcessImages("resources/test_inputs/1_1_small.png");
+        //Helper.preProcessImages("resources/test_inputs/1_1_small.png");
 
-        //---------------------------
-        // Tests functions separately
-        //---------------------------
-        System.out.println("Uncomment the function calls in Main.main to test your implementation.");
-        System.out.println("The provided tests are not complete. You have to write your own tests.");
-        System.out.println();
         runAllTests();
         //testThin();
         //testWithSkeleton();
         //testWithSkeleton();
 
-        testAll();
+        //testAll();
 
         //testDrawSkeleton("1_1"); //draw skeleton of fingerprint 1_1.png
         //testDrawSkeleton("1_2"); //draw skeleton of fingerprint 1_2.png
@@ -44,10 +35,10 @@ public class Main {
         // Test overall functionality
         //---------------------------
         //compare 1_1.png with 1_2.png: they are supposed to match
-        //testCompareFingerprints("1_1", "1_2", true);  //expected match: true
+        testCompareFingerprints("1_1", "1_2", true);  //expected match: true
 
         //compare 1_1.png with 2_1.png: they are not supposed to match
-        //testCompareFingerprints("1_1", "2_1", false); //expected match: false
+        testCompareFingerprints("1_1", "2_1", false); //expected match: false
 
         //compare 1_1 with all other images of the same finger
         //testCompareAllFingerprints("1_1", 1, true);
@@ -59,6 +50,16 @@ public class Main {
         //for (int f = 3; f <= 16; f++) {
         //    testCompareAllFingerprints("1_1", f, false);
         //}
+
+        for (int f = 1; f <= 16; f++) {
+            testCompareAllFingerprints("1_1", f, false);
+        }
+        for (int f = 1; f <= 16; f++) {
+            testCompareAllFingerprints("1_2", f, false);
+        }
+        for (int f = 1; f <= 16; f++) {
+            testCompareAllFingerprints("1_5", f, false);
+        }
     }
 
     /**
@@ -87,27 +88,24 @@ public class Main {
         System.out.print("testGetNeighbours 1: ");
         boolean[][] image = {{true}};
         boolean[] neighbours1 = Fingerprint.getNeighbours(image, 0, 0);
-        boolean[] expected1 = {false, false, false, false,
-                false, false, false, false};
+        boolean[] expected1 = {false, false, false, false, false, false, false, false};
         printResultsGetNeighbours(neighbours1, expected1);
 
         //TEST 2
         System.out.print("testGetNeighbours 2: ");
         boolean[][] image2 = {{true, true}};
         boolean[] neighbours2 = Fingerprint.getNeighbours(image2, 0, 0);
-        boolean[] expected2 = {false, false, true, false,
-                false, false, false, false};
+        boolean[] expected2 = {false, false, true, false, false, false, false, false};
         printResultsGetNeighbours(neighbours2, expected2);
 
         //TEST 3
         System.out.print("testGetNeighbours 3: ");
         boolean[][] image3 = {{true, true, true, true},
-                {true, false, false, true},
-                {true, false, false, true},
-                {true, true, true, true}};
+                                {true, false, false, true},
+                                {true, false, false, true},
+                                {true, true, true, true}};
         boolean[] neighbours3 = Fingerprint.getNeighbours(image3, 1, 1);
-        boolean[] expected3 = {true, true, false, false,
-                false, true, true, true};
+        boolean[] expected3 = {true, true, false, false, false, true, true, true};
         printResultsGetNeighbours(neighbours3, expected3);
 
         System.out.println();
@@ -139,8 +137,8 @@ public class Main {
         //TEST 1
         System.out.print("testBlackNeighbours1: ");
         boolean[] neighbours1 = {false, true, true,
-                false, false,
-                false, true, false};
+                                 false, false,
+                                 false, true, false};
         int expected1 = 3;
 
         int result1 = Fingerprint.blackNeighbours(neighbours1);
@@ -149,8 +147,8 @@ public class Main {
         //TEST 2
         System.out.print("testBlackNeighbours2: ");
         boolean[] neighbours2 = {true, true, false,
-                false, true,
-                false, false, true};
+                                 false, true,
+                                 false, false, true};
         int expected2 = 4;
 
         int result2 = Fingerprint.blackNeighbours(neighbours2);
@@ -238,26 +236,26 @@ public class Main {
     public static void testIdentical() {
         System.out.print("testIdentical1: ");
         boolean[][] image11 = {{false, true, false, true},
-                {true, false, true, false},
-                {false, true, true, false},
-                {true, false, false, true}};
+                                {true, false, true, false},
+                                {false, true, true, false},
+                                {true, false, false, true}};
         boolean[][] image21 = {{true, true, true, true},
-                {false, false, false, false},
-                {false, false, true, false},
-                {false, false, false, false}};
+                                {false, false, false, false},
+                                {false, false, true, false},
+                                {false, false, false, false}};
         final boolean expected1 = false;
         boolean result1 = Fingerprint.identical(image11, image21);
         printResultsIdentical(result1, expected1);
 
         System.out.print("testIdentical2: ");
         boolean[][] image12 = {{true, false, false, true},
-                {false, false, true, true},
-                {false, true, true, false},
-                {false, false, false, false}};
+                                {false, false, true, true},
+                                {false, true, true, false},
+                                {false, false, false, false}};
         boolean[][] image22 = {{true, false, false, true},
-                {false, false, true, true},
-                {false, true, true, false},
-                {false, false, false, false}};
+                                {false, false, true, true},
+                                {false, true, true, false},
+                                {false, false, false, false}};
         final boolean expected2 = true;
 
         boolean result2 = Fingerprint.identical(image12, image22);
@@ -265,13 +263,13 @@ public class Main {
 
         System.out.print("testIdentical2: ");
         boolean[][] image13 = {{true, false, false, true},
-                {false, false, true, true},
-                {false, true, true, false},
-                {false, false, false, false}};
+                                {false, false, true, true},
+                                {false, true, true, false},
+                                {false, false, false, false}};
         boolean[][] image23 = {{true, false, false, true},
-                {false, false, true, true},
-                {false, true, true, false},
-                {false, false, false, true}};
+                                {false, false, true, true},
+                                {false, true, true, false},
+                                {false, false, false, true}};
         final boolean expected3 = false;
 
         boolean result3 = Fingerprint.identical(image13, image23);
@@ -304,49 +302,49 @@ public class Main {
     public static void testConnectedPixels() {
         System.out.print("testConnectedPixels1: ");
         boolean[][] image1 = {{true, false, false, true},
-                {false, false, true, true},
-                {false, true, true, false},
-                {false, false, false, false}};
+                                {false, false, true, true},
+                                {false, true, true, false},
+                                {false, false, false, false}};
         boolean[][] expected1 = {{false, false, false, true},
-                {false, false, true, true},
-                {false, true, true, false},
-                {false, false, false, false}};
+                                {false, false, true, true},
+                                {false, true, true, false},
+                                {false, false, false, false}};
         boolean[][] connectedPixels1 = Fingerprint.connectedPixels(image1, 2, 1, 10);
         printResultConnectedPixels(connectedPixels1, expected1);
 
         System.out.print("testConnectedPixels2: ");
         boolean[][] image2 = {{true, false, false, true},
-                {false, false, true, true},
-                {false, true, true, false},
-                {false, false, false, false}};
+                                {false, false, true, true},
+                                {false, true, true, false},
+                                {false, false, false, false}};
         boolean[][] expected2 = {{false, false, false, false},
-                {false, false, true, false},
-                {false, true, true, false},
-                {false, false, false, false}};
+                                {false, false, true, false},
+                                {false, true, true, false},
+                                {false, false, false, false}};
         boolean[][] connectedPixels2 = Fingerprint.connectedPixels(image2, 2, 1, 1);
         printResultConnectedPixels(connectedPixels2, expected2);
 
         System.out.print("testConnectedPixels3: ");
         boolean[][] image3 = {{true, false, false, true, true},
-                {true, false, true, true, false},
-                {true, true, false, false, false},
-                {false, true, false, true, false}};
+                                {true, false, true, true, false},
+                                {true, true, false, false, false},
+                                {false, true, false, true, false}};
         boolean[][] expected3 = {{true, false, false, true, false},
-                {true, false, true, true, false},
-                {true, true, false, false, false},
-                {false, true, false, false, false}};
+                                {true, false, true, true, false},
+                                {true, true, false, false, false},
+                                {false, true, false, false, false}};
         boolean[][] connectedPixels3 = Fingerprint.connectedPixels(image3, 2, 1, 2);
         printResultConnectedPixels(connectedPixels3, expected3);
 
         System.out.print("testConnectedPixels4: ");
         boolean[][] image4 = {{true, true, false, false, false},
-                {false, false, true, false, false},
-                {true, false, true, true, false},
-                {false, true, false, true, true}};
+                                {false, false, true, false, false},
+                                {true, false, true, true, false},
+                                {false, true, false, true, true}};
         boolean[][] expected4 = {{false, true, false, false, false},
-                {false, false, true, false, false},
-                {false, false, true, true, false},
-                {false, true, false, true, true}};
+                                {false, false, true, false, false},
+                                {false, false, true, true, false},
+                                {false, true, false, true, true}};
         boolean[][] connectedPixels4 = Fingerprint.connectedPixels(image4, 2, 3, 2);
         printResultConnectedPixels(connectedPixels4, expected4);
 
@@ -378,10 +376,10 @@ public class Main {
     public static void testComputeAngle() {
         System.out.print("testComputeAngle1:");   //case decreasing linear curve --> angle is -pi/4 (-45°)
         boolean[][] connectedPixels1 = {{false, false, false, false, false},
-                {false, true, false, false, false},
-                {false, false, true, false, false},
-                {false, false, false, true, false},
-                {false, false, false, false, false}};
+                                        {false, true, false, false, false},
+                                        {false, false, true, false, false},
+                                        {false, false, false, true, false},
+                                        {false, false, false, false, false}};
         int row1 = 1;
         int col1 = 1;
         double slope1 = Fingerprint.computeSlope(connectedPixels1, row1, col1);
@@ -391,10 +389,10 @@ public class Main {
 
         System.out.print("testComputeAngle2:");   //Case vertical going up --> slope is infinity and angle pi/2 (90°)
         boolean[][] connectedPixels2 = {{false, false, false, false, false},
-                {false, false, true, false, false},
-                {false, false, true, false, false},
-                {false, false, true, false, false},
-                {false, false, false, false, false}};
+                                        {false, false, true, false, false},
+                                        {false, false, true, false, false},
+                                        {false, false, true, false, false},
+                                        {false, false, false, false, false}};
         int row2 = 3;
         int col2 = 2;
         double slope2 = Fingerprint.computeSlope(connectedPixels2, row2, col2);
@@ -404,10 +402,10 @@ public class Main {
 
         System.out.print("testComputeAngle3:");   //Case vertical going down --> slope is -infinity and angle -pi/2 (-90°)
         boolean[][] connectedPixels3 = {{false, false, false, false, false},
-                {false, false, true, false, false},
-                {false, false, true, false, false},
-                {false, false, true, false, false},
-                {false, false, false, false, false}};
+                                        {false, false, true, false, false},
+                                        {false, false, true, false, false},
+                                        {false, false, true, false, false},
+                                        {false, false, false, false, false}};
         int row3 = 1;
         int col3 = 2;
         double slope3 = Fingerprint.computeSlope(connectedPixels3, row3, col3);
@@ -417,10 +415,10 @@ public class Main {
 
         System.out.print("testComputeAngle4:");   //Case decreasing linear curve --> slope is -1 and angle 3*pi/4 (135°)
         boolean[][] connectedPixels4 = {{false, false, false, false, false},
-                {false, true, false, false, false},
-                {false, false, true, false, false},
-                {false, false, false, true, false},
-                {false, false, false, false, false}};
+                                        {false, true, false, false, false},
+                                        {false, false, true, false, false},
+                                        {false, false, false, true, false},
+                                        {false, false, false, false, false}};
         int row4 = 3;
         int col4 = 3;
         double slope4 = Fingerprint.computeSlope(connectedPixels4, row4, col4);
@@ -456,49 +454,49 @@ public class Main {
     public static void testOrientation() {
         System.out.print("testOrientation1: ");
         boolean[][] image1 = {{true, false, false, true},
-                {false, false, true, true},
-                {false, true, true, false},
-                {false, false, false, false}};
+                                {false, false, true, true},
+                                {false, true, true, false},
+                                {false, false, false, false}};
         int angle1 = Fingerprint.computeOrientation(image1, 2, 1, 3);
         int expectedAngle1 = 35;
         printResultOrientation(angle1, expectedAngle1);
 
         System.out.print("testOrientation2: ");  //case decreasing linear curve --> angle is -pi/4 (-45°)
         boolean[][] image2 = {{false, false, false, false, false},
-                {false, true, false, false, false},
-                {false, false, true, false, false},
-                {false, false, false, true, false},
-                {false, false, false, false, false}};
+                                {false, true, false, false, false},
+                                {false, false, true, false, false},
+                                {false, false, false, true, false},
+                                {false, false, false, false, false}};
         int angle2 = Fingerprint.computeOrientation(image2, 1, 1, 5);
         int expectedAngle2 = (-45 + 360);
         printResultOrientation(angle2, expectedAngle2);
 
         System.out.print("testOrientation3: ");  //Case vertical going up --> slope is infinity and angle pi/2 (90°)
         boolean[][] image3 = {{false, false, false, false, false},
-                {false, false, true, false, false},
-                {false, false, true, false, false},
-                {false, false, true, false, false},
-                {false, false, false, false, false}};
+                                {false, false, true, false, false},
+                                {false, false, true, false, false},
+                                {false, false, true, false, false},
+                                {false, false, false, false, false}};
         int angle3 = Fingerprint.computeOrientation(image3, 3, 2, 5);
         int expectedAngle3 = 90;
         printResultOrientation(angle3, expectedAngle3);
 
         System.out.print("testOrientation4: ");  //Case vertical going down --> slope is -infinity and angle -pi/2 (-90°)
         boolean[][] image4 = {{false, false, false, false, false},
-                {false, false, true, false, false},
-                {false, false, true, false, false},
-                {false, false, true, false, false},
-                {false, false, false, false, false}};
+                                {false, false, true, false, false},
+                                {false, false, true, false, false},
+                                {false, false, true, false, false},
+                                {false, false, false, false, false}};
         int angle4 = Fingerprint.computeOrientation(image4, 1, 2, 5);
         int expectedAngle4 = (-90 + 360);
         printResultOrientation(angle4, expectedAngle4);
 
         System.out.print("testOrientation5: ");  //Case decreasing linear curve --> slope is -1 and angle 3*pi/4 (135°)
         boolean[][] image5 = {{false, false, false, false, false},
-                {false, true, false, false, false},
-                {false, false, true, false, false},
-                {false, false, false, true, false},
-                {false, false, false, false, false}};
+                                {false, true, false, false, false},
+                                {false, false, true, false, false},
+                                {false, false, false, true, false},
+                                {false, false, false, false, false}};
         int angle5 = Fingerprint.computeOrientation(image5, 3, 3, 3);
         int expectedAngle5 = 135;
         printResultOrientation(angle5, expectedAngle5);
@@ -530,10 +528,10 @@ public class Main {
     public static void testComputeSlope() {
         System.out.print("testComputeSlope1: "); //Case increasing linear curve
         boolean[][] connectedPixels1 = {{false, false, false, false, false},
-                {false, false, false, true, false},
-                {false, false, true, false, false},
-                {false, true, false, false, false},
-                {false, false, false, false, false}};
+                                        {false, false, false, true, false},
+                                        {false, false, true, false, false},
+                                        {false, true, false, false, false},
+                                        {false, false, false, false, false}};
         int rowm1 = 3;
         int colm1 = 1;
         double coeff1 = Fingerprint.computeSlope(connectedPixels1, rowm1, colm1);
@@ -542,10 +540,10 @@ public class Main {
 
         System.out.print("testComputeSlope2: "); // Case a = constant
         boolean[][] connectedPixels2 = {{false, false, false, false, false},
-                {true, true, true, true, false},
-                {false, false, false, false, false},
-                {false, false, false, false, false},
-                {false, false, false, false, false}};
+                                        {true, true, true, true, false},
+                                        {false, false, false, false, false},
+                                        {false, false, false, false, false},
+                                        {false, false, false, false, false}};
         int rowm2 = 1;
         int colm2 = 1;
         double coeff2 = Fingerprint.computeSlope(connectedPixels2, rowm2, colm2);
@@ -554,10 +552,10 @@ public class Main {
 
         System.out.print("testComputeSlope3: "); // Case Infinity
         boolean[][] connectedPixels3 = {{false, false, false, false, false},
-                {false, true, false, false, false},
-                {false, true, false, false, false},
-                {false, true, false, false, false},
-                {false, false, false, false, false}};
+                                        {false, true, false, false, false},
+                                        {false, true, false, false, false},
+                                        {false, true, false, false, false},
+                                        {false, false, false, false, false}};
         int rowm3 = 3;
         int colm3 = 1;
         double coeff3 = Fingerprint.computeSlope(connectedPixels3, rowm3, colm3);
@@ -869,22 +867,21 @@ public class Main {
         }
     }
 
+    /**
+     * This function allows us to test all combinations of fingerprints.
+     */
     public static void testAll(){
         for (int k = 1; k <= 16; ++k){
             for(int i = 1; i <= 16; ++i){
                 for (int j = 1; j <= 8; ++j){
-                    if (k == i){
-                        testCompareFingerprints(k + "_1",  i + "_" + j, true);
-                    }else{
-                        testCompareFingerprints(k + "_1",  i + "_" + j, false);
-                    }
+                    testCompareFingerprints(k + "_1",  i + "_" + j, (k == i));
                 }
             }
         }
     }
 
-    /*
-     * Helper functions to print and compare arrays
+    /**
+     * Helper functions to compare two arrays of type boolean []
      */
     public static boolean arrayEqual(boolean[] array1, boolean[] array2) {
         if (array1 == null && array2 == null)
@@ -901,8 +898,8 @@ public class Main {
         return true;
     }
 
-    /*
-     * Helper functions to print and compare arrays
+    /**
+     * Helper functions to compare two arrays of type int [][]
      */
     public static boolean arrayEqual(int[] array1, int[] array2) {
         if (array1 == null && array2 == null)
@@ -919,6 +916,9 @@ public class Main {
         return true;
     }
 
+    /**
+     * Helper functions to compare two arrays of type boolean [][]
+     */
     public static boolean arrayEqual(boolean[][] array1, boolean[][] array2) {
         if (array1 == null && array2 == null)
             return true;
@@ -934,6 +934,9 @@ public class Main {
         return true;
     }
 
+    /**
+     * Helper functions to print a boolean [][] array
+     */
     public static void printArray(boolean[][] array) {
         for (boolean[] row : array) {
             for (boolean pixel : row) {
@@ -943,6 +946,9 @@ public class Main {
         }
     }
 
+    /**
+     * Helper functions to print a boolean [] array
+     */
     public static void printArray(boolean[] array) {
         for (boolean pixel : array) {
             System.out.print(pixel + ",");
@@ -950,6 +956,9 @@ public class Main {
         System.out.println();
     }
 
+    /**
+     * Helper functions to print a int [] array
+     */
     public static void printArray(int[] array) {
         for (int pixel : array) {
             System.out.print(pixel + ",");
