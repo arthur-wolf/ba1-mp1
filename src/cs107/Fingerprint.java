@@ -96,7 +96,6 @@ public class Fingerprint {
             if (rowToTest >= 0 && rowToTest <= (image.length - 1) && columnToTest >= 0 && columnToTest <= (image[rowToTest].length - 1)) {
                 result[i] = isPixelBlack(image[rowToTest][columnToTest]);
             } else {
-                //Le pixel n'appartient pas à image (outOfBounds) mais on considère qu'il est blanc --> false ;
                 result[i] = false;
             }
         }
@@ -182,8 +181,10 @@ public class Fingerprint {
      * otherwise.
      */
     public static boolean checkConditions(boolean[][] image, int row, int column, int step) {
+        assert (image != null);
+
         boolean[] neighbours = getNeighbours(image, row, column);
-        assert neighbours != null;
+        assert (neighbours != null);
 
         if (isPixelBlack(image[row][column]) && !areNeighboursNull(image, row, column)
                 && (blackNeighbours(neighbours) >= 2 && blackNeighbours(neighbours) <= 6) && transitions(neighbours) == 1) {
@@ -215,6 +216,8 @@ public class Fingerprint {
      * otherwise.
      */
     public static boolean identical(boolean[][] image1, boolean[][] image2) {
+        assert (image1 != null && image2 != null);
+
         return Main.arrayEqual(image1, image2);
     }
 
@@ -226,6 +229,8 @@ public class Fingerprint {
      * applying the thinning algorithm.
      */
     public static boolean[][] thin(boolean[][] image) {
+        assert (image != null);
+
         boolean[][] newImage = copyList(image);
         boolean isChangesNeeded;
 
@@ -254,6 +259,8 @@ public class Fingerprint {
      * <code>(row, col)</code>.
      */
     public static boolean[][] connectedPixels(boolean[][] image, int row, int col, int distance) {
+        assert (image != null);
+
         boolean[][] imageConnectedPixels = new boolean[image.length][image[0].length];
         imageConnectedPixels[row][col] = true;
         boolean foundNewConnectedPixels = true;
@@ -287,7 +294,9 @@ public class Fingerprint {
      * @return the slope.
      */
     public static double computeSlope(boolean[][] connectedPixels, int row, int col) {
-        double sumX2 = 0.0;       //double pour éviter l'erreur "integer division in floating-point context"
+        assert (connectedPixels != null);
+
+        double sumX2 = 0.0;
         double sumY2 = 0.0;
         double sumXY = 0.0;
         int x;
@@ -309,7 +318,7 @@ public class Fingerprint {
             return Double.POSITIVE_INFINITY;
         } else if (sumX2 >= sumY2) {
             return sumXY / sumX2;
-        } else { //SumX2 < sumY2
+        } else {
             return sumY2 / sumXY;
         }
     }
@@ -326,7 +335,9 @@ public class Fingerprint {
      * @return the orientation of the minutia in radians.
      */
     public static double computeAngle(boolean[][] connectedPixels, int row, int col, double slope) {
-        double angle = Math.atan(slope); // /!\ angle est ici en radians /!\
+        assert (connectedPixels != null);
+
+        double angle = Math.atan(slope);
         int x;
         int y;
         int abovePixels = 0;
@@ -368,6 +379,8 @@ public class Fingerprint {
      * @return The orientation in degrees.
      */
     public static int computeOrientation(boolean[][] image, int row, int col, int distance) {
+        assert (image != null);
+
         boolean[][] connectedPixels = connectedPixels(image, row, col, distance);
         double slope = computeSlope(connectedPixels, row, col);
         double angle = computeAngle(connectedPixels, row, col, slope);
@@ -390,6 +403,8 @@ public class Fingerprint {
      * @see #thin(boolean[][])
      */
     public static List<int[]> extract(boolean[][] image) {
+        assert (image != null);
+
         List<int[]> minutiae = new ArrayList<int[]>();
         for (int i = 1; i < image.length - 1; ++i) {
             for (int j = 1; j < image[1].length - 1; j++) {
@@ -544,6 +559,9 @@ public class Fingerprint {
      * otherwise.
      */
     public static boolean match(List<int[]> minutiae1, List<int[]> minutiae2) {
+        assert (minutiae1 != null);
+        assert (minutiae2 != null);
+
         for (int[] minutia1 : minutiae1) {
             for (int[] minutia2 : minutiae2) {
 
@@ -554,7 +572,7 @@ public class Fingerprint {
                 int colTranslation = minutia2[1] - minutia1[1];
                 int rotation = minutia2[2] - minutia1[2];
 
-                for(int i = (int) Math.ceil(rotation - MATCH_ANGLE_OFFSET); i < Math.floor(rotation + MATCH_ANGLE_OFFSET); ++i){
+                for(int i = (int) Math.ceil(rotation - MATCH_ANGLE_OFFSET); i <= Math.floor(rotation + MATCH_ANGLE_OFFSET); ++i){
                     List<int[]> minutia2WithTransformation = applyTransformation(minutiae2, centerRow, centerCol, rowTranslation, colTranslation, (i));
                     int foundMatching = matchingMinutiaeCount(minutiae1, minutia2WithTransformation, DISTANCE_THRESHOLD, ORIENTATION_THRESHOLD);
                     if(foundMatching >= FOUND_THRESHOLD){
@@ -586,6 +604,8 @@ public class Fingerprint {
      * otherwise.
      */
     public static boolean areNeighboursNull(boolean[][] image, int row, int column) {
+        assert (image != null);
+
         return getNeighbours(image, row, column) == null; //return true si neighbours[] est null
     }
 
@@ -596,6 +616,8 @@ public class Fingerprint {
      * @return the copied array
      */
     public static boolean[][] copyList(boolean[][] list) {
+        assert (list != null);
+
         boolean[][] newList = new boolean[list.length][list[0].length];
         for (int i = 0; i < list.length; ++i) {
             for (int j = 0; j < list[0].length; ++j) {
@@ -613,6 +635,8 @@ public class Fingerprint {
      * @return true if the pixel is a minutia
      */
     public static boolean isMinutiae(boolean pixel, boolean[] neighbours) {
+        assert (neighbours != null);
+
         return (isPixelBlack(pixel) && (transitions(neighbours) == 1 || transitions(neighbours) == 3));
     }
 }

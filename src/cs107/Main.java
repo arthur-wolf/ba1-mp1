@@ -21,39 +21,6 @@ public class Main {
         //Helper.preProcessImages("resources/test_inputs/1_1_small.png");
 
         runAllTests();
-        //testThin();
-        //testWithSkeleton();
-        //testWithSkeleton();
-
-        //testAll();
-
-        //testDrawSkeleton("1_1"); //draw skeleton of fingerprint 1_1.png
-        //testDrawSkeleton("1_2"); //draw skeleton of fingerprint 1_2.png
-        //testDrawSkeleton("2_1"); //draw skeleton of fingerprint 2_1.png
-
-        //testDrawMinutiae("1_1"); //draw minutiae of fingerprint 1_1.png
-        //testDrawMinutiae("1_2"); //draw minutiae of fingerprint 1_2.png
-        //testDrawMinutiae("2_1"); //draw minutiae of fingerprint 2_1.png
-
-        //---------------------------
-        // Test overall functionality
-        //---------------------------
-        //compare 1_1.png with 1_2.png: they are supposed to match
-        testCompareFingerprints("1_1", "1_2", true);  //expected match: true
-
-        //compare 1_1.png with 2_1.png: they are not supposed to match
-        testCompareFingerprints("1_1", "2_1", false); //expected match: false
-
-        //compare 1_1 with all other images of the same finger
-        //testCompareAllFingerprints("1_1", 1, true);
-
-        //compare 1_1 with all images of finger 2
-        //testCompareAllFingerprints("1_1", 2, false);
-
-        //compare 1_1 with all images of finger 3 to 16
-        //  for (int f = 3; f <= 16; f++) {
-        //    testCompareAllFingerprints("1_1", f, false);
-        //}
 
         for (int f = 1; f <= 16; f++) {
             testCompareAllFingerprints("1_1", f, f == 1);
@@ -64,7 +31,9 @@ public class Main {
         for (int f = 1; f <= 16; f++) {
             testCompareAllFingerprints("1_5", f, f == 1);
         }
+
     }
+
 
     /**
      * This function runs all the tests that can be found below
@@ -124,21 +93,18 @@ public class Main {
      * getNeighbours. You are free to modify and/or delete it.
      */
     public static void testGetNeighbours() {
-        //TEST 1
         System.out.print("testGetNeighbours 1: ");
         boolean[][] image = {{true}};
         boolean[] neighbours1 = Fingerprint.getNeighbours(image, 0, 0);
         boolean[] expected1 = {false, false, false, false, false, false, false, false};
         printResultsGetNeighbours(neighbours1, expected1);
 
-        //TEST 2
         System.out.print("testGetNeighbours 2: ");
         boolean[][] image2 = {{true, true}};
         boolean[] neighbours2 = Fingerprint.getNeighbours(image2, 0, 0);
         boolean[] expected2 = {false, false, true, false, false, false, false, false};
         printResultsGetNeighbours(neighbours2, expected2);
 
-        //TEST 3
         System.out.print("testGetNeighbours 3: ");
         boolean[][] image3 = {{true, true, true, true},
                                 {true, false, false, true},
@@ -174,23 +140,19 @@ public class Main {
      * This function tests the functionalities of blackNeighbours on two different datasets
      */
     public static void testBlackNeighbours() {
-        //TEST 1
         System.out.print("testBlackNeighbours1: ");
         boolean[] neighbours1 = {false, true, true,
                                  false, false,
                                  false, true, false};
         int expected1 = 3;
-
         int result1 = Fingerprint.blackNeighbours(neighbours1);
         printResultsBlackNeighbours(result1, expected1);
 
-        //TEST 2
         System.out.print("testBlackNeighbours2: ");
         boolean[] neighbours2 = {true, true, false,
                                  false, true,
                                  false, false, true};
         int expected2 = 4;
-
         int result2 = Fingerprint.blackNeighbours(neighbours2);
         printResultsBlackNeighbours(result2, expected2);
 
@@ -218,35 +180,27 @@ public class Main {
      * This function tests the functionalities of transition on 4 different datasets
      */
     public static void testTransition() {
-        //TEST 1
         System.out.print("testTransition1: ");
         boolean[] neighbours = {false, true, true, false, false, false, true, false, false};
         int expected1 = 2;
-
         int result1 = Fingerprint.transitions(neighbours);
         printResultsTransition(result1, expected1);
 
-        //TEST 2
         System.out.print("testTransition2: ");
         boolean[] neighbours2 = {true, false, true, false, true, false, true, false, false};
         int expected2 = 4;
-
         int result2 = Fingerprint.transitions(neighbours2);
         printResultsTransition(result2, expected2);
 
-        //TEST 3
         System.out.print("testTransition3: ");
         boolean[] neighbours3 = {false, false, true, false, true, false, true, true};
         int expected3 = 3;
-
         int result3 = Fingerprint.transitions(neighbours3);
         printResultsTransition(result3, expected3);
 
-        //TEST 4
         System.out.print("testTransition4: ");
         boolean[] neighbours4 = {false, true, true, false, false, false, true, false, false};
         int expected4 = 2;
-
         int result4 = Fingerprint.transitions(neighbours4);
         printResultsTransition(result4, expected4);
 
