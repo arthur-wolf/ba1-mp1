@@ -955,7 +955,7 @@ public class Main {
     }
 
     /**
-     * Helper functions to print a int [] array
+     * Helper functions to print an int [] array
      */
     public static void printArray(int[] array) {
         for (int pixel : array) {

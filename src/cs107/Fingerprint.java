@@ -544,6 +544,7 @@ public class Fingerprint {
 
                 if (distance <= maxDistance && diffOrientation <= maxOrientation) {
                     ++overlappingMinutiae;
+                    break;
                 }
             }
         }
