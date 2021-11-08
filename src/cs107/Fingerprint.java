@@ -566,8 +566,8 @@ public class Fingerprint {
             for (int[] minutia2 : minutiae2) {
 
                 //On utilise le centre de m2 comme centre de rotation.
-                int centerRow = minutia2[0];
-                int centerCol = minutia2[1];
+                int centerRow = minutia1[0];
+                int centerCol = minutia1[1];
                 int rowTranslation = minutia2[0] - minutia1[0];
                 int colTranslation = minutia2[1] - minutia1[1];
                 int rotation = minutia2[2] - minutia1[2];
