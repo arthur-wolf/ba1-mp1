@@ -31,5 +31,3 @@ jobs:
         with:
           name: ba1-mp1
           path: bin
-          
-          
