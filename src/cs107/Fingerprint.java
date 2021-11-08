@@ -72,7 +72,7 @@ public class Fingerprint {
         }
 
        /*
-        On met dans une liste ordonnée de type String toutes les positions à vérifier sous le format "ligne:colonne".
+        All the positions to be checked are put in an ordered String list with the format "row:column".
        */
         String[] coordsToCheck = new String[8];
         coordsToCheck[0] = (row - 1) + ":" + col;         //P0
@@ -87,7 +87,7 @@ public class Fingerprint {
         boolean[] result = new boolean[8];
 
       /*
-        On récupère pour chaque élément du tableau la ligne et la colonne à tester (coordonnées du pixel en question)
+        The row and column to be tested (coordinates of the pixel in question) are retrieved for each element of the table.
        */
         for (int i = 0; i < coordsToCheck.length; ++i) {
             int rowToTest = Integer.parseInt(coordsToCheck[i].split(":")[0]);
@@ -314,7 +314,7 @@ public class Fingerprint {
             }
         }
 
-        if (sumX2 == 0.0) { //Cas particulier : ligne verticale
+        if (sumX2 == 0.0) { //Special case: vertical line
             return Double.POSITIVE_INFINITY;
         } else if (sumX2 >= sumY2) {
             return sumXY / sumX2;
@@ -565,7 +565,6 @@ public class Fingerprint {
         for (int[] minutia1 : minutiae1) {
             for (int[] minutia2 : minutiae2) {
 
-                //On utilise le centre de m2 comme centre de rotation.
                 int centerRow = minutia1[0];
                 int centerCol = minutia1[1];
                 int rowTranslation = minutia2[0] - minutia1[0];
@@ -606,7 +605,7 @@ public class Fingerprint {
     public static boolean areNeighboursNull(boolean[][] image, int row, int column) {
         assert (image != null);
 
-        return getNeighbours(image, row, column) == null; //return true si neighbours[] est null
+        return getNeighbours(image, row, column) == null;
     }
 
     /**
