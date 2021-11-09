@@ -22,13 +22,13 @@ public class Main {
 
         runAllTests();
 
-        for (int f = 1; f <= 16; f++) {
+        for (int f = 1; f <= 16; ++f) {
             testCompareAllFingerprints("1_1", f, f == 1);
         }
-        for (int f = 1; f <= 16; f++) {
+        for (int f = 1; f <= 16; ++f) {
             testCompareAllFingerprints("1_2", f, f == 1);
         }
-        for (int f = 1; f <= 16; f++) {
+        for (int f = 1; f <= 16; ++f) {
             testCompareAllFingerprints("1_5", f, f == 1);
         }
 
@@ -69,7 +69,7 @@ public class Main {
                     //System.out.println(image.getRGB(col, row) & 0xffffff);
 
                     if(i == 0){
-                        i++;
+                        ++i;
                         image.setRGB(col, row, (0xFF_FF_00_00));
                     }else{
                         i = 0;
@@ -809,7 +809,7 @@ public class Main {
     public static void printMinutiae(List<int[]> minutiae) {
         for (int[] minutia : minutiae) {
             System.out.print("[");
-            for (int j = 0; j < minutia.length; j++) {
+            for (int j = 0; j < minutia.length; ++j) {
                 System.out.print(minutia[j]);
                 if (j != minutia.length - 1)
                     System.out.print(", ");
@@ -860,7 +860,7 @@ public class Main {
      * The third parameter indicates if we expected a match or not.
      */
     public static void testCompareAllFingerprints(String name1, int finger, boolean expectedResult) {
-        for (int i = 1; i <= 8; i++) {
+        for (int i = 1; i <= 8; ++i) {
             testCompareFingerprints(name1, finger + "_" + i, expectedResult);
         }
     }
@@ -889,7 +889,7 @@ public class Main {
         if (array1.length != array2.length)
             return false;
 
-        for (int i = 0; i < array1.length; i++) {
+        for (int i = 0; i < array1.length; ++i) {
             if (array1[i] != array2[i])
                 return false;
         }
@@ -907,7 +907,7 @@ public class Main {
         if (array1.length != array2.length)
             return false;
 
-        for (int i = 0; i < array1.length; i++) {
+        for (int i = 0; i < array1.length; ++i) {
             if (array1[i] != array2[i])
                 return false;
         }
@@ -925,7 +925,7 @@ public class Main {
         if (array1.length != array2.length)
             return false;
 
-        for (int i = 0; i < array1.length; i++) {
+        for (int i = 0; i < array1.length; ++i) {
             if (!arrayEqual(array1[i], array2[i]))
                 return false;
         }

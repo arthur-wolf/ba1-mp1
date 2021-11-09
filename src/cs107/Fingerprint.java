@@ -116,9 +116,9 @@ public class Fingerprint {
         assert (neighbours != null);
 
         int count = 0;
-        for (int i = 0; i < neighbours.length; i++) {
+        for (int i = 0; i < neighbours.length; ++i) {
             if (isPixelBlack(neighbours[i])) {
-                count++;
+                ++count;
             }
         }
         return count;
@@ -139,12 +139,12 @@ public class Fingerprint {
 
         for (int i = 0; i < (neighbours.length - 1); ++i) {
             if ((isPixelBlack(neighbours[i]) && !isPixelBlack(neighbours[(i + 1)]))) {
-                count++;
+                ++count;
             }
         }
 
         if ((isPixelBlack(neighbours[(neighbours.length - 1)]) && !isPixelBlack(neighbours[0]))) {
-            count++;
+            ++count;
         }
         return count;
     }
@@ -348,9 +348,9 @@ public class Fingerprint {
                     x = colPixel - col;
                     y = row - rowPixel;
                     if (y >= (-1 / slope) * x) {
-                        abovePixels++;
+                        ++abovePixels;
                     } else {
-                        underneathPixels++;
+                        ++underneathPixels;
                     }
                 }
             }
@@ -407,7 +407,7 @@ public class Fingerprint {
 
         List<int[]> minutiae = new ArrayList<int[]>();
         for (int i = 1; i < image.length - 1; ++i) {
-            for (int j = 1; j < image[1].length - 1; j++) {
+            for (int j = 1; j < image[1].length - 1; ++j) {
                 if (isMinutiae(image[i][j], getNeighbours(image, i, j))) {
                     int[] values = {i, j, computeOrientation(image, i, j, ORIENTATION_DISTANCE)};
                     minutiae.add(values);
