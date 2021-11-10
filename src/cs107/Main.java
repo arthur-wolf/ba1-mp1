@@ -765,12 +765,20 @@ public class Main {
         Helper.writeBinary("skeleton_1_1_small.png", skeleton1);
     }
 
+    /**
+     * This function draw a skeleton
+     * @param name String name of the fingerprint that is going to be thinned.
+     */
     public static void testDrawSkeleton(String name) {
         boolean[][] image1 = Helper.readBinary("resources/fingerprints/" + name + ".png");
         boolean[][] skeleton1 = Fingerprint.thin(image1);
         Helper.writeBinary("skeleton_" + name + ".png", skeleton1);
     }
 
+    /**
+     * This function draw a minutiae
+     * @param name String name of the fingerprint to which the minutiae will be drawn
+     */
     public static void testDrawMinutiae(String name) {
         boolean[][] image1 = Helper.readBinary("resources/fingerprints/" + name + ".png");
         boolean[][] skeleton1 = Fingerprint.thin(image1);
@@ -806,6 +814,10 @@ public class Main {
         Helper.writeARGB("minutiae_skeletonTest.png", colorImageSkeleton1);
     }
 
+    /**
+     * This function print a minutia
+     * @param minutiae List<int[]> a List containing minutia
+     */
     public static void printMinutiae(List<int[]> minutiae) {
         for (int[] minutia : minutiae) {
             System.out.print("[");
@@ -866,9 +878,9 @@ public class Main {
     }
 
     /**
-     * This function allows us to test all combinations of fingerprints.
+     * This function allow to test all combinations of fingerprints.
      */
-    public static void testAll(){
+    public static void testAllCombinations(){
         for (int k = 1; k <= 16; ++k){
             for(int i = 1; i <= 16; ++i){
                 for (int j = 1; j <= 8; ++j){
@@ -880,6 +892,9 @@ public class Main {
 
     /**
      * Helper functions to compare two arrays of type boolean []
+     * @param array1 boolean[]
+     * @param array2 boolean[]
+     * @return <code>True</code> if array are equal <code>False</code> otherwise.
      */
     public static boolean arrayEqual(boolean[] array1, boolean[] array2) {
         if (array1 == null && array2 == null)
@@ -898,6 +913,9 @@ public class Main {
 
     /**
      * Helper functions to compare two arrays of type int [][]
+     * @param array1 int[]
+     * @param array2 int[]
+     * @return <code>True</code> if array are equal <code>False</code> otherwise.
      */
     public static boolean arrayEqual(int[] array1, int[] array2) {
         if (array1 == null && array2 == null)
@@ -916,6 +934,9 @@ public class Main {
 
     /**
      * Helper functions to compare two arrays of type boolean [][]
+     * @param array1 boolean[][]
+     * @param array2 boolean[][]
+     * @return <code>True</code> if array are equal <code>False</code> otherwise.
      */
     public static boolean arrayEqual(boolean[][] array1, boolean[][] array2) {
         if (array1 == null && array2 == null)
@@ -934,6 +955,7 @@ public class Main {
 
     /**
      * Helper functions to print a boolean [][] array
+     * @param array boolean[][]
      */
     public static void printArray(boolean[][] array) {
         for (boolean[] row : array) {
@@ -946,6 +968,7 @@ public class Main {
 
     /**
      * Helper functions to print a boolean [] array
+     * @param array boolean[]
      */
     public static void printArray(boolean[] array) {
         for (boolean pixel : array) {
@@ -956,6 +979,7 @@ public class Main {
 
     /**
      * Helper functions to print an int [] array
+     * @param array int[]
      */
     public static void printArray(int[] array) {
         for (int pixel : array) {
