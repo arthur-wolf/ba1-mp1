@@ -104,50 +104,6 @@ public class Fingerprint {
         return neighbours;
     }
 
-    /*
-    public static boolean[] getNeighbours(boolean[][] image, int row, int col) {
-        assert (image != null);
-
-        if (row >= image.length || row < 0 || col >= image[0].length || col < 0) {
-            return null;
-        }
-
-
-       /*
-        All the positions to be checked are put in an ordered String list with the format "row:column".
-       */
-            /*
-        String[] coordsToCheck = new String[8];
-        coordsToCheck[0] = (row - 1) + ":" + col;         //P0
-        coordsToCheck[1] = (row - 1) + ":" + (col + 1);   //P1
-        coordsToCheck[2] = row + ":" + (col + 1);         //P2
-        coordsToCheck[3] = (row + 1) + ":" + (col + 1);   //P3
-        coordsToCheck[4] = (row + 1) + ":" + col;         //P4
-        coordsToCheck[5] = (row + 1) + ":" + (col - 1);   //P5
-        coordsToCheck[6] = row + ":" + (col - 1);         //P6
-        coordsToCheck[7] = (row - 1) + ":" + (col - 1);   //P7
-
-        boolean[] result = new boolean[8];
-
-      /*
-        The row and column to be tested (coordinates of the pixel in question) are retrieved for each element of the table.
-       */
-    /*
-        for (int i = 0; i < coordsToCheck.length; ++i) {
-            int rowToTest = Integer.parseInt(coordsToCheck[i].split(":")[0]);
-            int columnToTest = Integer.parseInt(coordsToCheck[i].split(":")[1]);
-
-            if (rowToTest >= 0 && rowToTest <= (image.length - 1) && columnToTest >= 0 && columnToTest <= (image[rowToTest].length - 1)) {
-                result[i] = isPixelBlack(image[rowToTest][columnToTest]);
-            } else {
-                result[i] = false;
-            }
-        }
-
-        return result;
-    }
-    */
-
     /**
      * Computes the number of black (<code>true</code>) pixels among the neighbours
      * of a pixel.
