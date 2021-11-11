@@ -67,13 +67,56 @@ public class Fingerprint {
     public static boolean[] getNeighbours(boolean[][] image, int row, int col) {
         assert (image != null);
 
+        boolean[] neighbours = new boolean[8];
+
+        if(row - 1 >= 0){
+            neighbours[0] = image[row -1][col] ;
+        }
+
+        if(col + 1 < image[0].length && row - 1 >= 0){
+            neighbours[1] = image[row - 1][col + 1];
+        }
+
+        if(col + 1 < image[0].length){
+            neighbours[2] = image[row][col + 1];
+        }
+
+        if(col + 1 < image[0].length && row + 1 < image.length){
+            neighbours[3] = image[row + 1][col + 1];
+        }
+
+        if(row + 1 < image.length){
+            neighbours[4] = image[row + 1][col] ;
+        }
+
+        if(col - 1 >= 0 &&  row + 1 < image.length){
+            neighbours[5] = image[row + 1][col - 1];
+        }
+
+        if(col - 1 >= 0) {
+            neighbours[6] = image[row][col - 1] ;
+        }
+
+        if(col - 1 >= 0 && row - 1 >= 0){
+            neighbours[7] = image[row -1][col - 1];
+        }
+
+        return neighbours;
+    }
+
+    /*
+    public static boolean[] getNeighbours(boolean[][] image, int row, int col) {
+        assert (image != null);
+
         if (row >= image.length || row < 0 || col >= image[0].length || col < 0) {
             return null;
         }
 
+
        /*
         All the positions to be checked are put in an ordered String list with the format "row:column".
        */
+            /*
         String[] coordsToCheck = new String[8];
         coordsToCheck[0] = (row - 1) + ":" + col;         //P0
         coordsToCheck[1] = (row - 1) + ":" + (col + 1);   //P1
@@ -89,6 +132,7 @@ public class Fingerprint {
       /*
         The row and column to be tested (coordinates of the pixel in question) are retrieved for each element of the table.
        */
+    /*
         for (int i = 0; i < coordsToCheck.length; ++i) {
             int rowToTest = Integer.parseInt(coordsToCheck[i].split(":")[0]);
             int columnToTest = Integer.parseInt(coordsToCheck[i].split(":")[1]);
@@ -102,6 +146,7 @@ public class Fingerprint {
 
         return result;
     }
+    */
 
     /**
      * Computes the number of black (<code>true</code>) pixels among the neighbours

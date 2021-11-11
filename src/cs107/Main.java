@@ -6,6 +6,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.IntStream;
 
 /**
  * This class will not be graded. You can use it to test your program.
@@ -22,6 +23,14 @@ public class Main {
 
         runAllTests();
 
+        IntStream.range(1,16).parallel().forEach(y -> testAllCombinationsOneFinger(y));
+
+        // exigible tests done with multi-threading
+        //IntStream.range(1,16).parallel().forEach(k -> testCompareAllFingerprints("1_1", k, (k == 1)));
+        //IntStream.range(1,16).parallel().forEach(k -> testCompareAllFingerprints("1_2", k, (k == 1)));
+        //IntStream.range(1,16).parallel().forEach(k -> testCompareAllFingerprints("1_5", k, (k == 1)));
+
+        // exigible tests done the normal way (without multi-threading)
         for (int f = 1; f <= 16; ++f) {
             testCompareAllFingerprints("1_1", f, f == 1);
         }
@@ -31,7 +40,6 @@ public class Main {
         for (int f = 1; f <= 16; ++f) {
             testCompareAllFingerprints("1_5", f, f == 1);
         }
-
     }
 
 
@@ -878,13 +886,27 @@ public class Main {
     }
 
     /**
+     * This function allow to test all combinations of fingerprint with finger number one.
+     @param y int finger to compare with
+     */
+    public static void testAllCombinationsOneFinger(int y) {
+        for (int l = 1; l <= 8; ++l) {
+                for (int j = 1; j <= 8; ++j) {
+                    testCompareFingerprints("1_" + l, y + "_" + j, (y == 1));
+                }
+        }
+    }
+
+    /**
      * This function allow to test all combinations of fingerprints.
      */
-    public static void testAllCombinations(){
+    public static void testAllCombinations() {
         for (int k = 1; k <= 16; ++k){
-            for(int i = 1; i <= 16; ++i){
-                for (int j = 1; j <= 8; ++j){
-                    testCompareFingerprints(k + "_1",  i + "_" + j, (k == i));
+            for (int l = 1; l <= 8; ++l) {
+                for (int i = 1; i <= 16; ++i) {
+                    for (int j = 1; j <= 8; ++j) {
+                        testCompareFingerprints(k + "_" + l, i + "_" + j, (k == i));
+                    }
                 }
             }
         }
