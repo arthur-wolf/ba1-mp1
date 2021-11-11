@@ -69,36 +69,36 @@ public class Fingerprint {
 
         boolean[] neighbours = new boolean[8];
 
-        if(row - 1 >= 0){
-            neighbours[0] = image[row -1][col] ;
+        if((row - 1) >= 0) {
+            neighbours[0] = image[row - 1][col];
         }
 
-        if(col + 1 < image[0].length && row - 1 >= 0){
+        if((col + 1) < image[0].length && (row - 1) >= 0) {
             neighbours[1] = image[row - 1][col + 1];
         }
 
-        if(col + 1 < image[0].length){
+        if((col + 1) < image[0].length) {
             neighbours[2] = image[row][col + 1];
         }
 
-        if(col + 1 < image[0].length && row + 1 < image.length){
+        if((col + 1) < image[0].length && (row + 1) < image.length) {
             neighbours[3] = image[row + 1][col + 1];
         }
 
-        if(row + 1 < image.length){
-            neighbours[4] = image[row + 1][col] ;
+        if((row + 1) < image.length) {
+            neighbours[4] = image[row + 1][col];
         }
 
-        if(col - 1 >= 0 &&  row + 1 < image.length){
+        if((col - 1) >= 0 && (row + 1) < image.length) {
             neighbours[5] = image[row + 1][col - 1];
         }
 
-        if(col - 1 >= 0) {
-            neighbours[6] = image[row][col - 1] ;
+        if((col - 1) >= 0) {
+            neighbours[6] = image[row][col - 1];
         }
 
-        if(col - 1 >= 0 && row - 1 >= 0){
-            neighbours[7] = image[row -1][col - 1];
+        if((col - 1) >= 0 && (row - 1) >= 0) {
+            neighbours[7] = image[row - 1][col - 1];
         }
 
         return neighbours;
