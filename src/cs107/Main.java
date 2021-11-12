@@ -19,13 +19,13 @@ public class Main {
      * @param args the command lines arguments of the program.
      */
     public static void main(String[] args) {
-        //Helper.preProcessImages("resources/test_inputs/1_1_small.png");
+        //preProcessImages("resources/original_fingerprints/1_1.png");
 
         runAllTests();
 
         IntStream.range(1,16).parallel().forEach(y -> testAllCombinationsOneFinger(y));
 
-        // exigible tests done with multi-threading
+        //exigible tests done with multi-threading
         //IntStream.range(1,16).parallel().forEach(k -> testCompareAllFingerprints("1_1", k, (k == 1)));
         //IntStream.range(1,16).parallel().forEach(k -> testCompareAllFingerprints("1_2", k, (k == 1)));
         //IntStream.range(1,16).parallel().forEach(k -> testCompareAllFingerprints("1_5", k, (k == 1)));
@@ -41,7 +41,6 @@ public class Main {
             testCompareAllFingerprints("1_5", f, f == 1);
         }
     }
-
 
     /**
      * This function runs all the tests that can be found below
@@ -62,38 +61,54 @@ public class Main {
 
     /**
      * This function process all the images from original_fingerprints
+     * @param name, name of the file to preprocess
      */
     public static void preProcessImages(String name) {
+        /*
+          Dumb approach at preprocessing images
+
+         */
         try {
-            // final BufferedImage image = ImageIO.read(Helper.class.getResource(name));
-            int i = 0;
+            //For the images given in the original_fingerprints folder, it seems this threshold is the most adapted.
+            int threshold = 160;
+
             final BufferedImage image = ImageIO.read(new File(name));
             final int width = image.getWidth();
             final int height = image.getHeight();
-            final int[][] array = new int[height][width];
+
             for (int row = 0; row < height; ++row) {
                 for (int col = 0; col < width; ++col) {
-                    //System.out.println("Row: " + row + " Col: " + col + " is " + image.getRGB(col, row));
-                    //System.out.println(image.getRGB(col, row) & 0xffffff);
-
-                    if(i == 0){
-                        ++i;
-                        image.setRGB(col, row, (0xFF_FF_00_00));
-                    }else{
-                        i = 0;
-                        image.setRGB(col, row, (148290273 & 0xffffff));
+                    if (rgbToGray(image.getRGB(col, row)) > threshold){
+                        //we set the pixel color to white
+                        image.setRGB(col, row, 0xffffff);
+                    }else {
+                        //we set the pixel color to black
+                        image.setRGB(col, row, 0);
                     }
                 }
             }
 
             try {
-                ImageIO.write(image, "png", new File("test.png"));
+                ImageIO.write(image, "png", new File("output_preprocess.png"));
             } catch (final IOException e) {
-
+                System.out.println(e + " Something went wrong when writing the image to file.");
             }
         } catch (final IOException e) {
             System.out.println(e + " Filename: " + name);
         }
+    }
+
+    /**
+     * This function return the gray intensity between 0 and 255 at a pixel.
+     * @param rgb, RGB value of a pixel
+     * @return gray intensity of the pixel between 0 and 255.
+     */
+    private static int rgbToGray(int rgb) {
+        int r = (rgb >> 16) & 0xff;
+        int g = (rgb >> 8) & 0xff;
+        int b = rgb & 0xff;
+
+        return Math.round((r + g + b) / 3);
     }
 
     /**
@@ -845,23 +860,14 @@ public class Main {
      */
     public static void testCompareFingerprints(String name1, String name2, boolean expectedResult) {
         boolean[][] image1 = Helper.readBinary("resources/fingerprints/" + name1 + ".png");
-        assert image1 != null;
-        //Helper.show(Helper.fromBinary(image1), "Image1");
+        assert (image1 != null);
         boolean[][] skeleton1 = Fingerprint.thin(image1);
-        //Helper.writeBinary("skeleton_" + name1 + ".png", skeleton1);
         List<int[]> minutiae1 = Fingerprint.extract(skeleton1);
 
-        //int[][] colorImageSkeleton1 = Helper.fromBinary(skeleton1);
-        //Helper.drawMinutia(colorImageSkeleton1, minutiae1);
-        //Helper.writeARGB("./minutiae_" + name1 + ".png", colorImageSkeleton1);
-
         boolean[][] image2 = Helper.readBinary("resources/fingerprints/" + name2 + ".png");
+        assert (image2 != null);
         boolean[][] skeleton2 = Fingerprint.thin(image2);
         List<int[]> minutiae2 = Fingerprint.extract(skeleton2);
-
-        //int[][] colorImageSkeleton2 = Helper.fromBinary(skeleton2);
-        //Helper.drawMinutia(colorImageSkeleton2, minutiae2);
-        //Helper.writeARGB("./minutiae_" + name2 + ".png", colorImageSkeleton2);
 
         boolean isMatch = Fingerprint.match(minutiae1, minutiae2);
         if(isMatch == expectedResult){
