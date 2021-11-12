@@ -1,12 +1,7 @@
 package cs107;
 
-import javax.imageio.ImageIO;
-import java.awt.image.BufferedImage;
-import java.io.File;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.IntStream;
 
 /**
  * This class will not be graded. You can use it to test your program.
@@ -19,26 +14,51 @@ public class Main {
      * @param args the command lines arguments of the program.
      */
     public static void main(String[] args) {
-        //preProcessImages("resources/original_fingerprints/1_1.png");
+        //Helper.preProcessImages("resources/test_inputs/1_1_small.png");
 
         runAllTests();
+        //testThin();
+        //testWithSkeleton();
+        //testWithSkeleton();
 
-        IntStream.range(1,16).parallel().forEach(y -> testAllCombinationsOneFinger(y));
+        //testAll();
 
-        //exigible tests done with multi-threading
-        //IntStream.range(1,16).parallel().forEach(k -> testCompareAllFingerprints("1_1", k, (k == 1)));
-        //IntStream.range(1,16).parallel().forEach(k -> testCompareAllFingerprints("1_2", k, (k == 1)));
-        //IntStream.range(1,16).parallel().forEach(k -> testCompareAllFingerprints("1_5", k, (k == 1)));
+        //testDrawSkeleton("1_1"); //draw skeleton of fingerprint 1_1.png
+        //testDrawSkeleton("1_2"); //draw skeleton of fingerprint 1_2.png
+        //testDrawSkeleton("2_1"); //draw skeleton of fingerprint 2_1.png
 
-        // exigible tests done the normal way (without multi-threading)
-        for (int f = 1; f <= 16; ++f) {
-            testCompareAllFingerprints("1_1", f, f == 1);
+        //testDrawMinutiae("1_1"); //draw minutiae of fingerprint 1_1.png
+        //testDrawMinutiae("1_2"); //draw minutiae of fingerprint 1_2.png
+        //testDrawMinutiae("2_1"); //draw minutiae of fingerprint 2_1.png
+
+        //---------------------------
+        // Test overall functionality
+        //---------------------------
+        //compare 1_1.png with 1_2.png: they are supposed to match
+        testCompareFingerprints("1_1", "1_2", true);  //expected match: true
+
+        //compare 1_1.png with 2_1.png: they are not supposed to match
+        testCompareFingerprints("1_1", "2_1", false); //expected match: false
+
+        //compare 1_1 with all other images of the same finger
+        //testCompareAllFingerprints("1_1", 1, true);
+
+        //compare 1_1 with all images of finger 2
+        //testCompareAllFingerprints("1_1", 2, false);
+
+        //compare 1_1 with all images of finger 3 to 16
+        //for (int f = 3; f <= 16; f++) {
+        //    testCompareAllFingerprints("1_1", f, false);
+        //}
+
+        for (int f = 1; f <= 16; f++) {
+            testCompareAllFingerprints("1_1", f, false);
         }
-        for (int f = 1; f <= 16; ++f) {
-            testCompareAllFingerprints("1_2", f, f == 1);
+        for (int f = 1; f <= 16; f++) {
+            testCompareAllFingerprints("1_2", f, false);
         }
-        for (int f = 1; f <= 16; ++f) {
-            testCompareAllFingerprints("1_5", f, f == 1);
+        for (int f = 1; f <= 16; f++) {
+            testCompareAllFingerprints("1_5", f, false);
         }
     }
 
@@ -59,139 +79,26 @@ public class Main {
         testApplyTransformation();
     }
 
-
-    /**
-     * This method writes the output of a test comparing fingerprints in an output.txt file
-     * that is located in the same folder as Main.java. output.txt is then used as an input
-     * for the python script that parses the results to output some statistics.
-     */
-    public static void writeOutput(){
-        try {
-            FileWriter myWriter = new FileWriter("output.txt");
-            myWriter.write(testAllCombinationsWithOutput());
-            myWriter.close();
-        } catch (IOException exception) {
-            System.out.println("An error has occured.");
-            exception.printStackTrace();
-        }
-    }
-
-    /**
-     * This method does the same job as testCompareFingerprints, but instead of outputting the results in the terminal,
-     * they are returned as a String that will be used as an input for a comparison method
-     * @param name1 First fingerprint
-     * @param name2 Second fingerprint
-     * @param expectedResult speaks for itself
-     * @return A string that contains the data outputted in the terminal by testCompareFingerprints
-     */
-    public static String testCompareFingerprintWithOutput(String name1, String name2, boolean expectedResult){
-        boolean[][] image1 = Helper.readBinary("resources/fingerprints/" + name1 + ".png");
-        assert (image1 != null);
-        boolean[][] skeleton1 = Fingerprint.thin(image1);
-        List<int[]> minutiae1 = Fingerprint.extract(skeleton1);
-
-        boolean[][] image2 = Helper.readBinary("resources/fingerprints/" + name2 + ".png");
-        assert (image2 != null);
-        boolean[][] skeleton2 = Fingerprint.thin(image2);
-        List<int[]> minutiae2 = Fingerprint.extract(skeleton2);
-
-        boolean isMatch = Fingerprint.match(minutiae1, minutiae2);
-        if(isMatch == expectedResult){
-            String s1 = "OK   : Compare " + name1 + " with " + name2;
-            return (s1 + ". Expected match: " + expectedResult + " Computed match: " + isMatch);
-        }else{
-            String s2 = "ERROR   : Compare " + name1 + " with " + name2;
-            return (s2 + ". Expected match: " + expectedResult + " Computed match: " + isMatch);
-        }
-    }
-
-    /**
-     * This method tests combinations for one finger and outputs the result as a concatenated String
-     * @return a concatenated String
-     */
-    public static String testAllCombinationsWithOutput() {
-        String result = "";
-        for (int k = 1; k <= 16; ++k){
-            for (int l = 1; l <= 8; ++l) {
-                for (int i = 1; i <= 16; ++i) {
-                    for (int j = 1; j <= 8; ++j) {
-                        result += (testCompareFingerprintWithOutput(k + "_" + l, i + "_" + j, (i == 1)) + "\n");
-                    }
-                }
-            }
-        }
-        return result;
-    }
-
-    /**
-     * This function process all the images from original_fingerprints
-     * @param name, name of the file to preprocess
-     */
-    public static void preProcessImages(String name) {
-        /*
-          Dumb approach at preprocessing images
-
-         */
-        try {
-            //For the images given in the original_fingerprints folder, it seems this threshold is the most adapted.
-            int threshold = 160;
-
-            final BufferedImage image = ImageIO.read(new File(name));
-            final int width = image.getWidth();
-            final int height = image.getHeight();
-
-            for (int row = 0; row < height; ++row) {
-                for (int col = 0; col < width; ++col) {
-                    if (rgbToGray(image.getRGB(col, row)) > threshold){
-                        //we set the pixel color to white
-                        image.setRGB(col, row, 0xffffff);
-                    }else {
-                        //we set the pixel color to black
-                        image.setRGB(col, row, 0);
-                    }
-                }
-            }
-
-            try {
-                ImageIO.write(image, "png", new File("output_preprocess.png"));
-            } catch (final IOException e) {
-                System.out.println(e + " Something went wrong when writing the image to file.");
-            }
-        } catch (final IOException e) {
-            System.out.println(e + " Filename: " + name);
-        }
-    }
-
-    /**
-     * This function return the gray intensity between 0 and 255 at a pixel.
-     * @param rgb, RGB value of a pixel
-     * @return gray intensity of the pixel between 0 and 255.
-     */
-    private static int rgbToGray(int rgb) {
-        int r = (rgb >> 16) & 0xff;
-        int g = (rgb >> 8) & 0xff;
-        int b = rgb & 0xff;
-
-        return Math.round((r + g + b) / 3);
-    }
-
     /**
      * This function is here to help you test the functionalities of
      * getNeighbours. You are free to modify and/or delete it.
      */
     public static void testGetNeighbours() {
+        //TEST 1
         System.out.print("testGetNeighbours 1: ");
         boolean[][] image = {{true}};
         boolean[] neighbours1 = Fingerprint.getNeighbours(image, 0, 0);
         boolean[] expected1 = {false, false, false, false, false, false, false, false};
         printResultsGetNeighbours(neighbours1, expected1);
 
+        //TEST 2
         System.out.print("testGetNeighbours 2: ");
         boolean[][] image2 = {{true, true}};
         boolean[] neighbours2 = Fingerprint.getNeighbours(image2, 0, 0);
         boolean[] expected2 = {false, false, true, false, false, false, false, false};
         printResultsGetNeighbours(neighbours2, expected2);
 
+        //TEST 3
         System.out.print("testGetNeighbours 3: ");
         boolean[][] image3 = {{true, true, true, true},
                                 {true, false, false, true},
@@ -227,19 +134,23 @@ public class Main {
      * This function tests the functionalities of blackNeighbours on two different datasets
      */
     public static void testBlackNeighbours() {
+        //TEST 1
         System.out.print("testBlackNeighbours1: ");
         boolean[] neighbours1 = {false, true, true,
                                  false, false,
                                  false, true, false};
         int expected1 = 3;
+
         int result1 = Fingerprint.blackNeighbours(neighbours1);
         printResultsBlackNeighbours(result1, expected1);
 
+        //TEST 2
         System.out.print("testBlackNeighbours2: ");
         boolean[] neighbours2 = {true, true, false,
                                  false, true,
                                  false, false, true};
         int expected2 = 4;
+
         int result2 = Fingerprint.blackNeighbours(neighbours2);
         printResultsBlackNeighbours(result2, expected2);
 
@@ -267,27 +178,35 @@ public class Main {
      * This function tests the functionalities of transition on 4 different datasets
      */
     public static void testTransition() {
+        //TEST 1
         System.out.print("testTransition1: ");
         boolean[] neighbours = {false, true, true, false, false, false, true, false, false};
         int expected1 = 2;
+
         int result1 = Fingerprint.transitions(neighbours);
         printResultsTransition(result1, expected1);
 
+        //TEST 2
         System.out.print("testTransition2: ");
         boolean[] neighbours2 = {true, false, true, false, true, false, true, false, false};
         int expected2 = 4;
+
         int result2 = Fingerprint.transitions(neighbours2);
         printResultsTransition(result2, expected2);
 
+        //TEST 3
         System.out.print("testTransition3: ");
         boolean[] neighbours3 = {false, false, true, false, true, false, true, true};
         int expected3 = 3;
+
         int result3 = Fingerprint.transitions(neighbours3);
         printResultsTransition(result3, expected3);
 
+        //TEST 4
         System.out.print("testTransition4: ");
         boolean[] neighbours4 = {false, true, true, false, false, false, true, false, false};
         int expected4 = 2;
+
         int result4 = Fingerprint.transitions(neighbours4);
         printResultsTransition(result4, expected4);
 
@@ -852,20 +771,12 @@ public class Main {
         Helper.writeBinary("skeleton_1_1_small.png", skeleton1);
     }
 
-    /**
-     * This function draw a skeleton
-     * @param name String name of the fingerprint that is going to be thinned.
-     */
     public static void testDrawSkeleton(String name) {
         boolean[][] image1 = Helper.readBinary("resources/fingerprints/" + name + ".png");
         boolean[][] skeleton1 = Fingerprint.thin(image1);
         Helper.writeBinary("skeleton_" + name + ".png", skeleton1);
     }
 
-    /**
-     * This function draw a minutiae
-     * @param name String name of the fingerprint to which the minutiae will be drawn
-     */
     public static void testDrawMinutiae(String name) {
         boolean[][] image1 = Helper.readBinary("resources/fingerprints/" + name + ".png");
         boolean[][] skeleton1 = Fingerprint.thin(image1);
@@ -901,14 +812,10 @@ public class Main {
         Helper.writeARGB("minutiae_skeletonTest.png", colorImageSkeleton1);
     }
 
-    /**
-     * This function print a minutia
-     * @param minutiae List<int[]> a List containing minutia
-     */
     public static void printMinutiae(List<int[]> minutiae) {
         for (int[] minutia : minutiae) {
             System.out.print("[");
-            for (int j = 0; j < minutia.length; ++j) {
+            for (int j = 0; j < minutia.length; j++) {
                 System.out.print(minutia[j]);
                 if (j != minutia.length - 1)
                     System.out.print(", ");
@@ -924,21 +831,26 @@ public class Main {
      */
     public static void testCompareFingerprints(String name1, String name2, boolean expectedResult) {
         boolean[][] image1 = Helper.readBinary("resources/fingerprints/" + name1 + ".png");
-        assert (image1 != null);
+        assert image1 != null;
+        //Helper.show(Helper.fromBinary(image1), "Image1");
         boolean[][] skeleton1 = Fingerprint.thin(image1);
+        //Helper.writeBinary("skeleton_" + name1 + ".png", skeleton1);
         List<int[]> minutiae1 = Fingerprint.extract(skeleton1);
 
+        //int[][] colorImageSkeleton1 = Helper.fromBinary(skeleton1);
+        //Helper.drawMinutia(colorImageSkeleton1, minutiae1);
+        //Helper.writeARGB("./minutiae_" + name1 + ".png", colorImageSkeleton1);
+
         boolean[][] image2 = Helper.readBinary("resources/fingerprints/" + name2 + ".png");
-        assert (image2 != null);
         boolean[][] skeleton2 = Fingerprint.thin(image2);
         List<int[]> minutiae2 = Fingerprint.extract(skeleton2);
 
+        //int[][] colorImageSkeleton2 = Helper.fromBinary(skeleton2);
+        //Helper.drawMinutia(colorImageSkeleton2, minutiae2);
+        //Helper.writeARGB("./minutiae_" + name2 + ".png", colorImageSkeleton2);
+
         boolean isMatch = Fingerprint.match(minutiae1, minutiae2);
-        if(isMatch == expectedResult){
-            System.out.print("OK   : Compare " + name1 + " with " + name2);
-        }else{
-            System.out.print("ERROR   : Compare " + name1 + " with " + name2);
-        }
+        System.out.print("Compare " + name1 + " with " + name2);
         System.out.print(". Expected match: " + expectedResult);
         System.out.println(" Computed match: " + isMatch);
     }
@@ -950,33 +862,19 @@ public class Main {
      * The third parameter indicates if we expected a match or not.
      */
     public static void testCompareAllFingerprints(String name1, int finger, boolean expectedResult) {
-        for (int i = 1; i <= 8; ++i) {
+        for (int i = 1; i <= 8; i++) {
             testCompareFingerprints(name1, finger + "_" + i, expectedResult);
         }
     }
 
     /**
-     * This function allow to test all combinations of fingerprint with finger number one.
-     @param y int finger to compare with
+     * This function allows us to test all combinations of fingerprints.
      */
-    public static void testAllCombinationsOneFinger(int y) {
-        for (int l = 1; l <= 8; ++l) {
-                for (int j = 1; j <= 8; ++j) {
-                    testCompareFingerprints("1_" + l, y + "_" + j, (y == 1));
-                }
-        }
-    }
-
-    /**
-     * This function allow to test all combinations of fingerprints.
-     */
-    public static void testAllCombinations() {
+    public static void testAll(){
         for (int k = 1; k <= 16; ++k){
-            for (int l = 1; l <= 8; ++l) {
-                for (int i = 1; i <= 16; ++i) {
-                    for (int j = 1; j <= 8; ++j) {
-                        testCompareFingerprints(k + "_" + l, i + "_" + j, (k == i));
-                    }
+            for(int i = 1; i <= 16; ++i){
+                for (int j = 1; j <= 8; ++j){
+                    testCompareFingerprints(k + "_1",  i + "_" + j, (k == i));
                 }
             }
         }
@@ -984,9 +882,6 @@ public class Main {
 
     /**
      * Helper functions to compare two arrays of type boolean []
-     * @param array1 boolean[]
-     * @param array2 boolean[]
-     * @return <code>True</code> if array are equal <code>False</code> otherwise.
      */
     public static boolean arrayEqual(boolean[] array1, boolean[] array2) {
         if (array1 == null && array2 == null)
@@ -996,7 +891,7 @@ public class Main {
         if (array1.length != array2.length)
             return false;
 
-        for (int i = 0; i < array1.length; ++i) {
+        for (int i = 0; i < array1.length; i++) {
             if (array1[i] != array2[i])
                 return false;
         }
@@ -1005,9 +900,6 @@ public class Main {
 
     /**
      * Helper functions to compare two arrays of type int [][]
-     * @param array1 int[]
-     * @param array2 int[]
-     * @return <code>True</code> if array are equal <code>False</code> otherwise.
      */
     public static boolean arrayEqual(int[] array1, int[] array2) {
         if (array1 == null && array2 == null)
@@ -1017,7 +909,7 @@ public class Main {
         if (array1.length != array2.length)
             return false;
 
-        for (int i = 0; i < array1.length; ++i) {
+        for (int i = 0; i < array1.length; i++) {
             if (array1[i] != array2[i])
                 return false;
         }
@@ -1026,9 +918,6 @@ public class Main {
 
     /**
      * Helper functions to compare two arrays of type boolean [][]
-     * @param array1 boolean[][]
-     * @param array2 boolean[][]
-     * @return <code>True</code> if array are equal <code>False</code> otherwise.
      */
     public static boolean arrayEqual(boolean[][] array1, boolean[][] array2) {
         if (array1 == null && array2 == null)
@@ -1038,7 +927,7 @@ public class Main {
         if (array1.length != array2.length)
             return false;
 
-        for (int i = 0; i < array1.length; ++i) {
+        for (int i = 0; i < array1.length; i++) {
             if (!arrayEqual(array1[i], array2[i]))
                 return false;
         }
@@ -1047,7 +936,6 @@ public class Main {
 
     /**
      * Helper functions to print a boolean [][] array
-     * @param array boolean[][]
      */
     public static void printArray(boolean[][] array) {
         for (boolean[] row : array) {
@@ -1060,7 +948,6 @@ public class Main {
 
     /**
      * Helper functions to print a boolean [] array
-     * @param array boolean[]
      */
     public static void printArray(boolean[] array) {
         for (boolean pixel : array) {
@@ -1070,8 +957,7 @@ public class Main {
     }
 
     /**
-     * Helper functions to print an int [] array
-     * @param array int[]
+     * Helper functions to print a int [] array
      */
     public static void printArray(int[] array) {
         for (int pixel : array) {
