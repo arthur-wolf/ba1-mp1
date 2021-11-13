@@ -3,6 +3,7 @@ package cs107;
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
 import java.io.File;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -21,9 +22,11 @@ public class Main {
     public static void main(String[] args) {
         //preProcessImages("resources/original_fingerprints/1_1.png");
 
-        runAllTests();
+        //writeOutput();
 
-        IntStream.range(1,16).parallel().forEach(y -> testAllCombinationsOneFinger(y));
+        runAllTests(); //Runs all the unit tests that have been written
+
+        //IntStream.range(1,16).parallel().forEach(y -> testAllCombinationsOneFinger(y));
 
         //exigible tests done with multi-threading
         //IntStream.range(1,16).parallel().forEach(k -> testCompareAllFingerprints("1_1", k, (k == 1)));
@@ -63,7 +66,7 @@ public class Main {
     /**
      * This method writes the output of a test comparing fingerprints in an output.txt file
      * that is located in the same folder as Main.java. output.txt is then used as an input
-     * for the python script that parses the results to output some statistics.
+     * for the python script that parses the results to output some statistics (./main.py)
      */
     public static void writeOutput(){
         try {
@@ -106,7 +109,7 @@ public class Main {
     }
 
     /**
-     * This method tests combinations for one finger and outputs the result as a concatenated String
+     * This method tests combinations for one finger
      * @return a concatenated String
      */
     public static String testAllCombinationsWithOutput() {
@@ -116,6 +119,7 @@ public class Main {
                 for (int i = 1; i <= 16; ++i) {
                     for (int j = 1; j <= 8; ++j) {
                         result += (testCompareFingerprintWithOutput(k + "_" + l, i + "_" + j, (i == 1)) + "\n");
+                        System.out.println("Wrote " + k + "_" + l + " ~ " + i + "_" + j);
                     }
                 }
             }

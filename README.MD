@@ -12,15 +12,17 @@ Therefore we used m2 as a rotation center in our match() function.
 ## Bonus
 
 ### Multithreading
-We have used multi-threading in order to improve how fast the program was running. This has been done in Main.java.
+We have used multithreading in order to improve how fast the program was running. This has been done in Main.java.
 We used the method "IntStream.range(1, 16).parallel().forEach(y -> testAllCombinationsOneFinger(y))" to test all combinations for
-one finger using multithreading, and using one thread per finger to compare with.
+one finger using one thread per finger to compare with.
+
 This has greatly improved the run time. Indeed, we have been able to test 1/16th of all possible combinations
 in only 10 minutes (approximately).
 
 ### Outputting data and parsing for statistics
-We thought it would be great to know what percentage of our results were accurate, or not. In order to do this, we created the writeOutput()
+We thought it would be great to know what percentage of our results were accurate (or not). In order to do this, we created the writeOutput()
 method that outputs the results that we can usually find in the terminal into an output.txt file.
+
 This file serves as an input for a python script we have written, that parses the output.txt file and outputs
 how many comparisons have the good result, and how many false positives / false negatives have been found among all the comparisons.
 you can find this script under the name main.py.
