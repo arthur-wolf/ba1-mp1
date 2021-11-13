@@ -7,7 +7,7 @@ This project permits the comparison of fingerprints
 ## Notes
 - During the development of the project, we found out we should use m2 as a rotation center in the match() function instead of m1.
 Therefore we used m2 as a rotation center in our match() function.
-- We improved the Main file by adding convenient debugging functions and tests to make sure that all our functions work properly.
+- We improved the Main file by adding convenient debugging functions and unit tests to make sure that all our functions work properly.
 
 ## Bonus
 
