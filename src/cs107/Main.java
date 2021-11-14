@@ -22,10 +22,11 @@ public class Main {
     public static void main(String[] args) {
         //preProcessImages("resources/original_fingerprints/1_1.png");
 
-        //writeOutput();
+        //writeOutput(); //Outputs output.txt
 
         runAllTests(); //Runs all the unit tests that have been written
 
+        //tests all the combinations with multi-threading
         //IntStream.range(1,16).parallel().forEach(y -> testAllCombinationsOneFinger(y));
 
         //exigible tests done with multi-threading
@@ -74,7 +75,7 @@ public class Main {
             myWriter.write(testAllCombinationsWithOutput());
             myWriter.close();
         } catch (IOException exception) {
-            System.out.println("An error has occured.");
+            System.out.println("An error has occurred.");
             exception.printStackTrace();
         }
     }
@@ -113,18 +114,18 @@ public class Main {
      * @return a concatenated String
      */
     public static String testAllCombinationsWithOutput() {
-        String result = "";
+        StringBuilder result = new StringBuilder();
         for (int k = 1; k <= 16; ++k){
             for (int l = 1; l <= 8; ++l) {
                 for (int i = 1; i <= 16; ++i) {
                     for (int j = 1; j <= 8; ++j) {
-                        result += (testCompareFingerprintWithOutput(k + "_" + l, i + "_" + j, (i == 1)) + "\n");
+                        result.append(testCompareFingerprintWithOutput(k + "_" + l, i + "_" + j, (i == 1))).append("\n");
                         System.out.println("Wrote " + k + "_" + l + " ~ " + i + "_" + j);
                     }
                 }
             }
         }
-        return result;
+        return result.toString();
     }
 
     /**
@@ -346,7 +347,7 @@ public class Main {
         boolean result2 = Fingerprint.identical(image12, image22);
         printResultsIdentical(result2, expected2);
 
-        System.out.print("testIdentical2: ");
+        System.out.print("testIdentical3: ");
         boolean[][] image13 = {{true, false, false, true},
                                 {false, false, true, true},
                                 {false, true, true, false},
@@ -632,7 +633,7 @@ public class Main {
         int rowm2 = 1;
         int colm2 = 1;
         double coeff2 = Fingerprint.computeSlope(connectedPixels2, rowm2, colm2);
-        double expected2 = 0;
+        double expected2 = 0.0;
         printResultComputeSlope(coeff2, expected2);
 
         System.out.print("testComputeSlope3: "); // Case Infinity

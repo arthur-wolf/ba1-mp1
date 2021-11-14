@@ -5,9 +5,12 @@
 This project permits the comparison of fingerprints
 
 ## Notes
-- During the development of the project, we found out we should use m2 as a rotation center in the match() function instead of m1.
-Therefore we used m2 as a rotation center in our match() function.
-- We improved the Main file by adding convenient debugging functions and unit tests to make sure that all our functions work properly.
+- During the development of the project, we found out we should use m2 as a rotation center in the match() method instead of m1.
+Therefore, we used m2 as a rotation center in our match() method.
+- We improved the Main file by adding convenient debugging functions and unit tests to make sure that all our methods work properly.
+- We tested all combinations of fingerprints between the fingers 1_1, 1_2 & 1_5. We obtained exactly the same results as expected whether we took m1 as the center of rotation or m2.
+- You will later on read about a python script we have written. Please follow the link to the GitHub repository that can be found at the end of this README file in order to be able to read it,
+as we did not include it in the /src folder. (also will it look nicer on GitHub)
 
 ## Bonus
 
@@ -17,7 +20,7 @@ We used the method "IntStream.range(1, 16).parallel().forEach(y -> testAllCombin
 one finger using one thread per finger to compare with.
 
 This has greatly improved the run time. Indeed, we have been able to test 1/16th of all possible combinations
-in only 10 minutes (approximately).
+in only 15 minutes (approximately).
 
 ### Outputting data and parsing for statistics
 We thought it would be great to know what percentage of our results were accurate (or not). In order to do this, we created the writeOutput()
@@ -29,20 +32,21 @@ you can find this script under the name main.py.
 
 ### Image Pre-Processing
 We were also interested in pre-processing images. We first tried a dumb approach by changing the colour of each pixel to black or white depending on whether it was closer to black or white.
-The code written to achieve that can be found in the method preProcessImages() in our Main file.  
-We realised that this approach was not suitable here, as there are holes in the lines, the image may be deteriorated in places. Therefore we went for more general research and came across the following research paper: [Fingerprint Image Enhancement: Algorithm and Performance Evaluation](https://ieeexplore.ieee.org/document/709565).  
+The code written to achieve that can be found in the method preProcessImages() in our Main file. You can find the result of the image pre-processing of original_fingerprints/1_1.png on GitHub under the file output_preprocess.png.
+
+We realised that this approach was not suitable here, as there are holes in the lines, the image may be deteriorated in places. Therefore, we went for more general research and came across the following research paper: [Fingerprint Image Enhancement: Algorithm and Performance Evaluation](https://ieeexplore.ieee.org/document/709565) written by Lin Hong, Yifei Wan and A. Jain.
 Using this paper we were able to break down the image preprocessing into 5 steps:
 - Normalization
 - Orientation Image Estimation
 - Frequency Image Estimation
 - Region Mask Generation
-- Filtering    
+- Filtering
       
-We had a try at implementing image normalization but we didn't had satisfactory results.
+We had a try at implementing image normalization, but we didn't have satisfactory results.
 
-### Github Actions
+### GitHub Actions
 
-We also set up a Java CI Github action to automatically build and run our project after each commit to ensure that we kept our results consistent as we went along.
+We also set up a Java CI GitHub action to automatically build and run our project after each commit to ensure that we kept our results consistent as we went along.
 
 ## Authors
 
@@ -56,5 +60,5 @@ The resources provided for the project are available here:
 - [Project's Description](https://proginsc.epfl.ch/wwwhiver/mini-projet1/descriptif.html)
 - [Project's Guidelines](https://proginsc.epfl.ch/wwwhiver/mini-projet1/fingerprint.pdf)
 
-## Github repository
+## GitHub repository
 - [Project's repository](https://github.com/arthur-wolf/ba1-mp1)

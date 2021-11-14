@@ -66,8 +66,11 @@ public class Fingerprint {
 
     public static boolean[] getNeighbours(boolean[][] image, int row, int col) {
         assert (image != null);
-
         boolean[] neighbours = new boolean[8];
+
+        if (row >= image.length || row < 0 || col >= image[0].length || col < 0) {
+            return null;
+        }
 
         if((col - 1) >= 0 && (row - 1) >= 0) {
             neighbours[7] = image[row - 1][col - 1];
@@ -99,7 +102,6 @@ public class Fingerprint {
         if((row - 1) >= 0) {
             neighbours[0] = image[row - 1][col];
         }
-
         return neighbours;
     }
 
@@ -113,7 +115,9 @@ public class Fingerprint {
      * @return the number of black neighbours.
      */
     public static int blackNeighbours(boolean[] neighbours) {
-        assert (neighbours != null);
+        if(neighbours == null){
+            return 0;
+        }
 
         int count = 0;
         for (int i = 0; i < neighbours.length; ++i) {
@@ -134,7 +138,9 @@ public class Fingerprint {
      * @return the number of white to black transitions.
      */
     public static int transitions(boolean[] neighbours) {
-        assert (neighbours != null);
+        if(neighbours == null) {
+            return 0;
+        }
         int count = 0;
 
         for (int i = 0; i < (neighbours.length - 1); ++i) {
@@ -185,7 +191,7 @@ public class Fingerprint {
 
         boolean[] neighbours = getNeighbours(image, row, column);
 
-        if (isPixelBlack(image[row][column]) && !areNeighboursNull(image, row, column)
+        if (neighbours != null && isPixelBlack(image[row][column]) && !areNeighboursNull(image, row, column)
                 && (blackNeighbours(neighbours) >= 2 && blackNeighbours(neighbours) <= 6) && transitions(neighbours) == 1) {
 
             boolean P0 = neighbours[0];
